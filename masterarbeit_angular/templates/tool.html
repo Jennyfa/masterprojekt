@@ -2,58 +2,36 @@
 <form class="form-horizontal" name="empList" id="empForm" ng-submit="insertInfo(empInfo);" >
     <h3 class="text-center">Entscheidungsunterstützung zur Auswahl einer Frontend-Technologie für SAP HANA</h3>
     <div class="form-group">
-        <div class="radio">
-            <label for="checkbox_neu">
-                <input type="radio" class="form-control" name="checkbox_neu" id="checkbox_neu" value="Neuentwicklung" ng-model="empInfo.projekt" autofocus required checked>
-               Es handelt sich um eine Neuentwicklung
-            </label>
-        </div>
-        <div class="radio">
-            <label for="checkbox_austausch">
-                <input type="radio" class="form-control" name="checkbox_austausch" id="checkbox_austausch" value="Austausch" ng-model="empInfo.projekt" autofocus required>
-                Bestehende Software, die Frontend-Technologie soll ausgetauscht werden.
-            </label>
-        </div>
-        </div>
+        <label for="Gender">Projektart:</label>
+        <label for="" class="radio-inline gender">
+            <input type="radio" name="emp_gender" value="neu" ng-model="empInfo.projektart">Neuentwicklung
+        </label>
+        <label for="" class="radio-inline gender">
+            <input type="radio" name="emp_gender" value="alt" ng-model="empInfo.projektart">Bestehende Software
+        </label>
+    </div>
     <div class="form-group">
-        <label for="technologie">Welche Technologien wurden verwendet:</label>
-        <select class="form-control" id="technologie" name="technologie"  ng-model="empInfo.technologie" autofocus />
-            <option>AngularJS</option>
-            <option>OpenUI5</option>
-            <option>SAPUI5</option>
-            <option>Twitter Bootstrap</option>
-            <option>Kendo</option>
+        <label for="singleSelect">Welche Technologie nutzen Sie bereits? </label><br>
+        <select name="singleSelect" ng-model="empInfo.technologien">
+            <option value="SAPUI5">SAPUI5</option>
+            <option value="AngularJs">AngularJs</option>
         </select>
+
     </div>
+
+    <label for="multipleSelect">Welche Programmiersprachen beherrschen die Entwickler?</label><br>
+    <select name="multipleSelect" id="multipleSelect" ng-model="empInfo.sprache" multiple>
+        <option value="Java">Java</option>
+        <option value="Scala">Scala</option>
+        <option value="JavaScript">JavaScript</option>
+        <option value="PHP">PHP</option>
+        <option value="HTML">HTML/CSS</option>
+    </select><br>
+    <!--<tt>multipleSelect = {{data.multipleSelect}}</tt><br/>-->
+
+
+    <!--Contraints: Java muss größer sein als VErsion 7.4... , Qualitätsattribute, derzeit eingesetzte Technologien -->
     <div class="form-group">
-        <label for="sprache">Welche Programmiersprachen beherrschen die Entwickler?</label>
-        <select class="form-control" id="sprache" name="sprache"  ng-model="empInfo.sprache" autofocus />
-        <option>Java</option>
-        <option>Scala</option>
-        <option>JavaScript</option>
-        <option>PHP</option>
-        <option>HTML/CSS</option>
-        </select></div>
-    <div class="form-group">
-        <p class="text-danger" ng-show="empList.emp_email.$invalid && empList.emp_email.$dirty">Invalid Email!</p>
-    </div>
-    <div class="form-group">
-        <label for="Gender">Gender:</label>
-        <label for="" class="radio-inline gender">
-            <input type="radio" name="emp_gender" value="male" ng-model="empInfo.gender">Male
-        </label>
-        <label for="" class="radio-inline gender">
-            <input type="radio" name="emp_gender" value="female" ng-model="empInfo.gender">Female
-        </label>
-    </div>
-    <div class="form-group">
-        <label for="Address">Address:</label>
-        <input type="text" name="emp_address" class="form-control" placeholder="Enter Employee Address" ng-model="empInfo.address" autofocus required />
-    </div>
-    <div class="form-group">
-        <p class="text-danger" ng-show="empList.emp_address.$invalid && empList.emp_address.$dirty">Address field is Empty!</p>
-    </div>
-    <div class="form-group">
-        <button class="btn btn-warning" ng-disabled="empList.$invalid">Empfehlung erhalten</button>
+        <button class="btn btn-warning" ng-disabled="empList.$invalid" ng-click="pressEmpf(empInfo)">Empfehlung erhalten</button>
     </div>
 </form>

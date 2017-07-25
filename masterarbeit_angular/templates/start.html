@@ -20,38 +20,6 @@
 
         </div>
     </div>
-    <div class="row">
-        <!-- Table to show employee detalis -->
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <tr>
-                    <th>Technologie ID</th>
-                    <th>Technologe Name</th>
-                    <th>Beschreibung</th>
-                    <th>Vorteile</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-                <tr ng-repeat="detail in details.data| filter:search_query">
-                    <td>
-                        <span>{{detail.tech_id}}</span></td>
-                    <td>{{detail.tech_name}}</td>
-                    <td>{{detail.description}}</td>
-                    <td>{{detail.vorteile}}</td>
-                    <td>
-                        <button class="btn btn-default" href="#/routing/{{p.id}} title="Overview"><span class="glyphicon glyphicon-view"></span></button>
-                    </td>
-                    <td>
-                        <button class="btn btn-warning" ng-click="editInfo(detail)" title="Edit"><span class="glyphicon glyphicon-edit"></span></button>
-                    </td>
-                    <td>
-                        <button class="btn btn-danger" ng-click="deleteInfo(detail)" title="Delete"><span class="glyphicon glyphicon-trash"></span></button>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
 </div>
 
 

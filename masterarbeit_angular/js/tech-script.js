@@ -1,7 +1,7 @@
 // Application module
 'use strict';
 
-var crudApp = angular.module('crudApp', ['ngRoute', 'nvd3', 'ui.bootstrap']);
+var crudApp = angular.module('crudApp', ['ngRoute']);
 
 //Routing
 crudApp.config(['$routeProvider', function ($routeProvider) {
@@ -23,36 +23,6 @@ crudApp.config(['$routeProvider', function ($routeProvider) {
             redirectTo: '/'
         })
 }]);
-
-//Technologien
-crudApp.controller("DbController", function ($scope, $http) {
-
-    //Get all Technologies
-    $http.post('databaseFiles/empDetails.php')
-        .then(function (info) {
-            // Stored the returned data into scope
-            $scope.all = info;
-            //console.log($scope.all);
-        });
-
-
-});
-
-//TechnologieDetails
-crudApp.controller("detailController", function ($scope, $http, $routeParams) {
-    /*$scope.techdetails = ["Emil", "Tobias", "Linus"];*/
-    //console.log($routeParams.param)
-    $http.post('databaseFiles/getTech.php', $routeParams.param)
-        .then(function (info) {
-            $scope.details = info;
-            $scope.details.data.links = new Array;
-            $scope.details.data.links = $scope.details.data.tech_links.split(";");
-            console.log($scope);
-            //console.log($scope.details);
-        });
-
-});
-
 crudApp.directive('goClick', function ($location) {
     return function (scope, element, attrs) {
         var path;
@@ -69,7 +39,33 @@ crudApp.directive('goClick', function ($location) {
     };
 });
 
+//Technologien
+crudApp.controller("DbController", function ($scope, $http) {
 
+    //Get all Technologies
+    $http.post('databaseFiles/empDetails.php')
+        .then(function (info) {
+            // Stored the returned data into scope
+            $scope.all = info;
+            console.log(info);
+            //console.log($scope.all);
+        });
+});
+
+//TechnologieDetails
+crudApp.controller("detailController", function ($scope, $http, $routeParams) {
+    /*$scope.techdetails = ["Emil", "Tobias", "Linus"];*/
+    //console.log($routeParams.param)
+    $http.post('databaseFiles/getTech.php', $routeParams.param)
+        .then(function (info) {
+            $scope.details = info;
+            $scope.details.data.links = new Array;
+            $scope.details.data.links = $scope.details.data.tech_links.split(";");
+            console.log($scope);
+            //console.log($scope.details);
+        });
+
+});
 crudApp.controller('MainCtrl', function ($scope, $http, $routeParams) {
 
     var abhängigkeitsstufen = 2;
@@ -307,126 +303,13 @@ crudApp.controller('MainCtrl', function ($scope, $http, $routeParams) {
 
 });
 
-/* function getOtherRelationen(id, i, nodes, links) {
- var  nodestest = [];
- var linkstest = [];
- $http.post('databaseFiles/getRelation.php', id)
- .then(function (info) {
-
- if(info.data.length!=0){
- console.log(info);
- for (var j = 0; j < info.data.length; j++) {
-
- nodes.push({
- "id": info.data[j].tech_id,
- "name": info.data[j].tech_name,
- "group": 1
-
- });
- //source: Das wie viele Element aus den Nodes ist die Quelle
- //Target: Das wie vielte Element aus den Nodes ist das Ziel
- //value: Strichstärke
- links.push({
- "source": i+1,
- "target": i+2,
- "value": 1
- });
- }
- }
- console.log(linkstest)
- });
- }*/
-/*
-
- {"source": 1, "target": 0, "value": 1},
- {"source": 2, "target": 0, "value": 8},
- {"source": 3, "target": 0, "value": 10},
- //function deleteDuplicates(arr) { var temp = {}; for (var i = 0; i < arr.length; i++) temp[arr[i]] = true; var r = []; for (var k in temp) r.push(k); return r; }
- /*
- for (var i = 0; i < ($scope.relation.data.length); i++) {
-
- console.log( $scope.relation.data[i].vontech_id)
- technologien.push(
- $scope.relation.data[i].von_tech_id);
- }
- console.log(technologien);
- $http.post('databaseFiles/getTechRelation.php', technologien)
- .then(function (info) {
-
- console.log(info);
- });
- var nodestest = [];
-
- for (var i = 0; i < info.data.length; i++) {
- console.log (info.data);
-
- nodestest.push({
- name: info.data[i].tech_id,
- group: 1
- });
- }
-
- console.log (nodestest);
-
- console.log($scope);
- console.log($scope.techdetails);
-
- $scope.showDetail = function(info){
- $scope.techdetails = info;
- console.log($scope.techdetails);
- /*$('#techdetails').slideUp();
- $('#techdetails').slideToggle();
-
- .when('/tech/:param', {
- templateUrl: 'templates/tech.details.html',
- controller: 'DetailCtrl'
- })
+//Tool
+crudApp.controller("toolController", function ($scope, $http) {
 
 
+    $scope.pressEmpf = function(myE) {
+        console.log("Klick");
+        console.log(myE);
+    }
 
- var crudApp;
- crudApp = angular.module('crudApp', ['ngRoute']);
- crudApp.controller("DbController", ['$scope', '$http', function ($scope, $http) {
-
- // Function to get employee details from the database
- $scope.details = '';
-
- getInfo = function () {
- // Sending request to EmpDetails.php files
- $http.post('databaseFiles/empDetails.php')
- .then(function (data) {
- // Stored the returned data into scope
- $scope.details = data;
-
- });
- }
- getInfo();
-
- $scope.currentTech = {};
- $scope.getTech = function(info){
- $scope.currentTech = info;
- console.log(info);
- $('#empForm').slideUp();
- $('#empForm').slideToggle();
- }
-
- }]);
- */
-/* .controller("DetailCtrl", function($scope,$http,$routeParams) {
- console.log('Passed parameter contact id is:', $routeParams.param);
- $scope.selectedTechId = $routeParams.param;
- var id = $scope.selectedTechId;
- var queryString = "SELECT * FROM technologien WHERE tech_id=" + id;
-
-
- $scope.getIn = function (info) {
- // Sending request to EmpDetails.php files
- $http.post('databaseFiles/getTech.php', queryString)
- .then(function (data) {
- // Stored the returned data into scope
- console.log(data);
- $scope.details = data;
- });
- }
- $scope.getIn();
- })*/
+});
