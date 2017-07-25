@@ -1,0 +1,33 @@
+<div class="row wrapper" id="techdetails">
+    <div class="container wrapper ng-scope" id="details_tech_name">
+        <h1>{{details.data.tech_name}}</h1>
+        <div class="row" ng-controller="MainCtrl">
+            <div class="col-lg-12 graph">
+                <nvd3 options="options" data="data" class="with-3d-shadow with-transitions"></nvd3>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-lg-8">
+                <p>{{details.data.tech_desc}}</p><br/>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h4>Vorteile</h4>
+                        <p>{{details.data.tech_pro}}</p>
+                    </div>
+                    <div class="col-lg-6">
+                        <h4>Nachteile</h4>
+                        <p>{{details.data.tech_con}}</p>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="col-lg-4">
+                <h4>Links</h4>
+                    <s>{{details.data.links[0]}}<
+            </div>
+        </div>
+    </div>
+</div>
+

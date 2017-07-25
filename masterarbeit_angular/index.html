@@ -1,0 +1,76 @@
+<html ng-app="crudApp">
+<head>
+    <title>Enscheidungsunterstützung Prototyp</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <!-- Include main CSS -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <!-- Include jQuery library -->
+    <script src="js/jQuery/jquery.min.js"></script>
+    <!-- Include Bootstrap Javascript -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/scroll.js"></script>
+   <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.3/nv.d3.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.3/nv.d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-nvd3/1.0.7/angular-nvd3.min.js"></script>
+    <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+
+
+    <!--
+    <script src="https://d3js.org/d3-scale-chromatic.v0.3.js"></script>
+        <script src="http://d3js.org/colorbrewer.v1.min.js"></script>-->
+    <script type="text/javascript" src="js/colorbrewer.js"></script>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60" ng-controller="DbController">
+
+<!--<div ng-controller="DbController">-->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#myPage">Logo</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#/" title="Home" data-target="#">HOME</a></li>
+                    <li><a href="#/tech" title="Technologien" data-target="#tech">TECHNOLOGIEN</a></li>
+                    <!-- <li><a href="#/techdetails/1" title="About Us" data-target="#tech">SAPUI5</a></li>-->
+                    <li><a href="#/tool" title="Tool" data-target="#tool">TOOL</a></li>
+                    <!-- <li><a href="#/tech/1" title="About Us" data-target="#tech/1">SAPUI5</a></li>-->
+
+                   <!-- <li><a href="#contact">CONTACT</a></li>-->
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="ng-view"></div>
+
+    <footer class="container-fluid text-center bg-grey">
+        <a href="#myPage" title="To Top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </a>
+        <p>Made by Jennyfa Jurisch</p>
+    </footer>
+
+<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.js"></script>-->
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-animate.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-route.js"></script>
+<!-- Include controller -->
+<script src="js/tech-script.js"></script>
+</body>
+</html>
