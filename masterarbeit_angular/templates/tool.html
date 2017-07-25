@@ -1,17 +1,39 @@
 <!-- Form used to add new entries of employee in database -->
-<form class="form-horizontal alert alert-warning" name="empList" id="empForm" ng-submit="insertInfo(empInfo);" >
-    <h3 class="text-center">Insert Employee Details Into Database</h3>
+<form class="form-horizontal" name="empList" id="empForm" ng-submit="insertInfo(empInfo);" >
+    <h3 class="text-center">Entscheidungsunterstützung zur Auswahl einer Frontend-Technologie für SAP HANA</h3>
     <div class="form-group">
-        <label for="Name">Employee Name:</label>
-        <input type="text" name="emp_name" class="form-control" placeholder="Enter Employee Name" ng-model="empInfo.name" autofocus required />
+        <div class="radio">
+            <label for="checkbox_neu">
+                <input type="radio" class="form-control" name="checkbox_neu" id="checkbox_neu" value="Neuentwicklung" ng-model="empInfo.projekt" autofocus required checked>
+               Es handelt sich um eine Neuentwicklung
+            </label>
+        </div>
+        <div class="radio">
+            <label for="checkbox_austausch">
+                <input type="radio" class="form-control" name="checkbox_austausch" id="checkbox_austausch" value="Austausch" ng-model="empInfo.projekt" autofocus required>
+                Bestehende Software, die Frontend-Technologie soll ausgetauscht werden.
+            </label>
+        </div>
+        </div>
+    <div class="form-group">
+        <label for="technologie">Welche Technologien wurden verwendet:</label>
+        <select class="form-control" id="technologie" name="technologie"  ng-model="empInfo.technologie" autofocus />
+            <option>AngularJS</option>
+            <option>OpenUI5</option>
+            <option>SAPUI5</option>
+            <option>Twitter Bootstrap</option>
+            <option>Kendo</option>
+        </select>
     </div>
     <div class="form-group">
-        <p class="text-danger" ng-show="empList.emp_name.$invalid && empList.emp_name.$dirty">Name field is Empty!</p>
-    </div>
-    <div class="form-group">
-        <label for="Email">Email Address:</label>
-        <input type="email" name="emp_email" class="form-control" placeholder="Enter Employee Email Address" ng-model="empInfo.email" autofocus required />
-    </div>
+        <label for="sprache">Welche Programmiersprachen beherrschen die Entwickler?</label>
+        <select class="form-control" id="sprache" name="sprache"  ng-model="empInfo.sprache" autofocus />
+        <option>Java</option>
+        <option>Scala</option>
+        <option>JavaScript</option>
+        <option>PHP</option>
+        <option>HTML/CSS</option>
+        </select></div>
     <div class="form-group">
         <p class="text-danger" ng-show="empList.emp_email.$invalid && empList.emp_email.$dirty">Invalid Email!</p>
     </div>

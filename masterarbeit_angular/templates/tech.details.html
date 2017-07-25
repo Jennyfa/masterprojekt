@@ -25,7 +25,13 @@
             </div>
             <div class="col-lg-4">
                 <h4>Links</h4>
-                    <s>{{details.data.links[0]}}<
+
+                <ul ng-repeat="result in details.data.links">
+                    <li><a href="{{result}}" target="_blank">{{result}}</a>
+                    </li>
+                    </ul>
+
+
             </div>
         </div>
     </div>

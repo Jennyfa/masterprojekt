@@ -1,7 +1,7 @@
 // Application module
 'use strict';
 
-var crudApp = angular.module('crudApp', ['ngRoute', 'nvd3']);
+var crudApp = angular.module('crudApp', ['ngRoute', 'nvd3', 'ui.bootstrap']);
 
 //Routing
 crudApp.config(['$routeProvider', function ($routeProvider) {
