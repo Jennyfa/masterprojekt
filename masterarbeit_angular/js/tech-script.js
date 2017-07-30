@@ -47,7 +47,7 @@ crudApp.controller("DbController", function ($scope, $http) {
         .then(function (info) {
             // Stored the returned data into scope
             $scope.all = info;
-            console.log(info);
+            //console.log(info);
             //console.log($scope.all);
         });
 });
@@ -61,42 +61,33 @@ crudApp.controller("detailController", function ($scope, $http, $routeParams) {
             $scope.details = info;
             $scope.details.data.links = new Array;
             $scope.details.data.links = $scope.details.data.tech_links.split(";");
-            console.log($scope);
-            //console.log($scope.details);
+            //console.log($scope);
+
         });
 
 });
 crudApp.controller('MainCtrl', function ($scope, $http, $routeParams) {
 
     var abhängigkeitsstufen = 2;
-
     var width = $(".container").width(),
         height = 450;
-
-
-
     var force = d3.layout.force()
         .size([width, height])
         .linkDistance(100) //Länge der Links
         .charge(-300)
         .on("tick", tick);
-
     var svg = d3.select(".graph").append("svg")
         .attr("width", width)
         .attr("height", height)
         .style("border", "none");
-
-
     var path = svg.append("g").selectAll("path"),
         circle = svg.append("g").selectAll("circle"),
         text = svg.append("g").selectAll("text"),
         marker = svg.append("defs").selectAll("marker"),
         markerg = svg.append("defs").selectAll("markerg");
-
     var nodes = {};
 
     function update(links) {
-        console.log("I work for it");
         // Compute the distinct nodes from the links.
         links.forEach(function (link) {
             link.source = nodes[link.source] || (nodes[link.source] = {name: link.source, type: link.type});
@@ -168,10 +159,11 @@ crudApp.controller('MainCtrl', function ($scope, $http, $routeParams) {
             .attr("class", function (d) {
                 return "node " + d.group;
             })
-          .on("click", function(d)
-           {
-                   console.log(d3.select(this).data().map(function (d) { return d.name; }));
-               });
+            .on("click", function (d) {
+                console.log(d3.select(this).data().map(function (d) {
+                    return d.name;
+                }));
+            });
 
         // -------------------------------
 
@@ -211,105 +203,174 @@ crudApp.controller('MainCtrl', function ($scope, $http, $routeParams) {
         return "translate(" + d.x + "," + d.y + ")";
     }
 
-
     var nodes = [];
     var links = [];
-
-    getData($scope).then(function (response) {
+    //Die ausgesucht Technologie
+    nodes[$routeParams.param] = (
+        {name: $routeParams.param, id: $routeParams.techid, cat: "framework", group: "g1"}
+    );
+    var count = 0;
+    //die ersten Abhängigkeiten für diese Technolgie
+    getData($routeParams.techid).then(function (response) {
     }, function (Error) {
         console.log(Error);
     });
-
-    function getData($scope) {
+    function getData(id) {
         //Abhängigkeiten holen
         return new Promise(function (resolve, reject) {
-            $http.post('databaseFiles/getRelation.php', $routeParams.techid)
+            $http.post('databaseFiles/getRelation.php', id)
                 .then(function (info) {
+                    var relationen = info;
                     console.log(info);
-                    $scope.relationen = info;
-                    nodes[$routeParams.param] = (
-                    {name: $routeParams.param, id: $routeParams.techid, cat: "framework", group: "g1"}
-                    );
-                    //TEchnologie ansich
-                    //Abhängigkeiten 1, Stufe zu node hinzufügen
-                    for (var i = 0; i < $scope.relationen.data.length; i++) {
-                        nodes[$scope.relationen.data[i].tech_name] = (
-                        {
-                            name: ($scope.relationen.data[i].tech_name).toString(),
-                            id: ($scope.relationen.data[i].tech_id).toString(),
-                            cat: "framework",
-                            group: "g2"
-                        }
-                        );
-                        links.push(
-                            {
-                                source: $routeParams.param,
-                                target: ($scope.relationen.data[i].tech_name).toString(),
-                                type: "a" + ($scope.relationen.data[i].ab_type).toString()
-                            }
-                        );
-                    }
 
-                    getOtherNodes(nodes, links, $scope.relationen.data);
+                    //Array für die IDs
+                    var arrayIDs = new Array;
+                    if (relationen.data.length != 0) {
+                        //Für Anzahl der Abhängigkeiten durchlaufen
+                        for (var i = 0; i < relationen.data.length; i++) {
+                            //Id in Array speichern
+                            arrayIDs[i] = relationen.data[i].tech_id;
+                            nodes[relationen.data[i].tech_name] = (
+                            {
+                                name: relationen.data[i].tech_name,
+                                id: relationen.data[i].tech_id,
+                                cat: "framework",
+                                group: "g" + (count + 2),
+                            }
+                            );
+                            var source;
+                            var names = new Array;
+                            var b = 0;
+                            for (var n in nodes) {
+                                names[b] = n;
+                                b++;
+                            }
+                            for (var a = 0; a < names.length; a++) {
+                                if (nodes[names[a]].id == relationen.data[i].t_id) {
+                                    source = nodes[names[a]].name;
+
+                                }
+                            }
+                            links.push(
+                                {
+                                    source: source,
+                                    target: relationen.data[i].tech_name,
+                                    type: "a" + relationen.data[i].ab_type
+                                }
+                            );
+                        }
+
+                        count++;
+                        getData(arrayIDs);
+                    }
+                    else {
+                        update(links);
+                    }
                 });
             resolve(links);
             reject(Error('Image didn\'t load successfully; error code:'));
         });
-
     }
-
-    //die bestehenden Nodes auf weitere Abhängigkeiten prüfen
-    function getOtherNodes(nodes, links, relationen) {
-        if (relationen.length != 0) {
-            //wie viele elemente hat technologie[1]
-
-            var arrayIDs=new Array;
-            for(var o=0; o< relationen.length; o++){
-                arrayIDs[o]=relationen[o].tech_id;
-            }
-
-            $http.post('databaseFiles/getRelation.php', arrayIDs)
-                .then(function (info) {
-                    console.log(info);
-
-                        //wie viele elemente hat die relation von Technologie[1][j]
-                        for (var k = 0; k < info.data.length; k++) {
-                            nodes[info.data[k].tech_name] = (
-                            {
-                                name: (info.data[k].tech_name).toString(),
-                                id: (info.data[k].tech_id).toString(),
-                                cat: "framework",
-                                group: "g3"
-                            }
-                            );
-
-
-                            links.push(
-                                {
-                                    source: "testTech5",
-                                    target:(info.data[k].tech_name).toString(),
-                                type:"a" + (info.data[k].ab_type).toString()
-                                });
-
-
-                        }
-                    console.log(links);
-                    update(links);
-                });
-
-        }
-    }
-
-
 });
 
+//Erste Relationen holen, wenn keine vorhanden aufhören wenn vorhanden weitere holen
+
 //Tool
-crudApp.controller("toolController", function ($scope, $http) {
+crudApp.controller("toolController", function ($scope, $http){
 
+    //Anfrage initalisieren
+    $scope.anfrage="";
 
-    $scope.pressEmpf = function(myE) {
-        console.log("Klick");
-        console.log(myE);
+    //Ergebnis erst eziegen wenn Submit & vorher formular anzeigen
+    $('#ergebnis').css('display', 'none');
+    $('#empForm').css('display', 'block');
+
+    //6. create resetForm() function. This will be called on Reset button click.
+    $scope.resetForm = function () {//ToDo: Reset
+        };
+    //Wenn Projektart Neu, alte Technologien nicht anzeigen
+    $('input[name="projektart"]').change(function () {
+        var name = $(this).val();
+        if(name==="new"){$('#technologien').css('display', 'none');}
+        else{$('#technologien').css('display', 'block');}
+    });
+
+    //Ergebnis anzeigen
+    $scope.pressEmpf = function (myE) {
+
+        $scope.anfrage=myE;
+        //Get all Technologies
+        $scope.solution =new Array;
+        getResult($scope.anfrage);
+        console.log($scope.solution);
+        getBestOf($scope.solution);
+
+        //Formular nicht mehr anzeigen
+        $('#empForm').css('display', 'none');
+        //Ergebnis anzeigen
+        $('#ergebnis').slideUp();
+        $('#ergebnis').slideToggle();
+
+        //Technologien nach Sprache durchsuchen
+        //Technologien nach den Technologien durchsuchen
+        //derzeitiges Framework nicht mitanzeigen
+        //empfehlungsreihenfolge naach übereinstimmung der Kirertien
+        //Wenn keine übereinstimmung keine Anzeige der technologie
     }
 
+    function getResult(abfrage){
+        console.log(abfrage);
+
+
+        //Sprache
+        $http.post('databaseFiles/getLanguage.php', abfrage.language)
+            .then(function (info) {
+                //Alle die Sprache beinhalten
+
+                console.log(info.data);
+                for(var i=0; i < info.data.length; i++){
+                    console.log("work");
+                    $scope.solution[0]=info.data[i];
+                }
+
+
+                //console.log(info);
+                //console.log($scope.all);
+            });
+        //Sprache
+        $http.post('databaseFiles/getFeature.php', abfrage.features)
+            .then(function (info) {
+                //Alle die Sprache beinhalten
+                for(var i=0; i< info.data.length; i++){
+                    $scope.solution[i+1]=info.data[i];
+                }
+                //console.log(info);
+                //console.log($scope.all);
+            });
+
+
+
+    }
+
+    function getBestOf(){
+        console.log("work it");
+        console.log($scope.solution);
+        console.log($scope.solution.length);
+        for(var i=0; i<$scope.solution.length; i++){
+            console.log($scope.solution.length);
+            for(var j=0; j<$scope.solution.length; j++){
+                console.log($scope.solution);
+                if($scope.solution[i].tech_name==$scope.solution[j].tech_name){
+                    if($scope.solution[i].empf){
+                        $scope.solution[i].empf++;
+                    }
+                    else{
+                        $scope.solution[i].empf=0;
+                    }
+                    console.log("work it");
+                    $scope.solution.splice(j,1);
+                }
+            }
+        }
+    }
 });

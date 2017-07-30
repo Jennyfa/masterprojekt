@@ -1,37 +1,104 @@
-<!-- Form used to add new entries of employee in database -->
-<form class="form-horizontal" name="empList" id="empForm" ng-submit="insertInfo(empInfo);" >
-    <h3 class="text-center">Entscheidungsunterstützung zur Auswahl einer Frontend-Technologie für SAP HANA</h3>
-    <div class="form-group">
-        <label for="Gender">Projektart:</label>
-        <label for="" class="radio-inline gender">
-            <input type="radio" name="emp_gender" value="neu" ng-model="empInfo.projektart">Neuentwicklung
-        </label>
-        <label for="" class="radio-inline gender">
-            <input type="radio" name="emp_gender" value="alt" ng-model="empInfo.projektart">Bestehende Software
-        </label>
-    </div>
-    <div class="form-group">
-        <label for="singleSelect">Welche Technologie nutzen Sie bereits? </label><br>
-        <select name="singleSelect" ng-model="empInfo.technologien">
-            <option value="SAPUI5">SAPUI5</option>
-            <option value="AngularJs">AngularJs</option>
-        </select>
+<form class="form-horizontal" role="form" id="empForm">
+    <h3 class="text-center">Entscheidungsunterstützung</h3>
 
+    <div class="form-group">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-9">
+            <span><b>Handelt es sich um ein neues Projekt oder ein bestehendes?</b></span>
+            <div class="radio">
+                <label><input value="new" type="radio" name="projektart" ng-model="empInfo.projektart" />Neuimplementation</label>
+            </div>
+            <div class="radio">
+                <label><input value="old" type="radio" name="projektart" ng-model="empInfo.projektart" />Austausch</label>
+            </div>
+        </div>
     </div>
 
-    <label for="multipleSelect">Welche Programmiersprachen beherrschen die Entwickler?</label><br>
-    <select name="multipleSelect" id="multipleSelect" ng-model="empInfo.sprache" multiple>
-        <option value="Java">Java</option>
-        <option value="Scala">Scala</option>
-        <option value="JavaScript">JavaScript</option>
-        <option value="PHP">PHP</option>
-        <option value="HTML">HTML/CSS</option>
-    </select><br>
-    <!--<tt>multipleSelect = {{data.multipleSelect}}</tt><br/>-->
+    <div class="form-group">
+        <label for="language" class="col-sm-3 control-label">Bekannte Programmiersprachen</label>
+        <div class="col-sm-2">
+            <select id="language" class="form-control" ng-model="empInfo.language" multiple ng-multiple="true">
+                <option value="Java">Java</option>
+                <option value="Scala">Scala</option>
+                <option value="JavaScript">JavaScript</option>
+            </select>
+        </div>
+        <div class="col-sm-7"></div>
+    </div>
 
+    <div class="form-group"  id="technologien">
+        <label for="techs" class="col-sm-3 control-label">Bereits eingesetzte Technologien:</label>
+        <div class="col-sm-2">
+            <select id="techs" class="form-control" ng-model="empInfo.techs"  multiple ng-multiple="true">
+                <option value="SAPUI5">SAPUI5</option>
+                <option value="OPENUI5">OPENUI5</option>
+                <option value="AngularJS">AngularJS</option>
+                <option value="KendoUI">Kendo UI</option>
+            </select>
+        </div>
+        <div class="col-sm-7"></div>
+    </div>
 
+    <div class="form-group"  id="features">
+        <label for="feat" class="col-sm-3 control-label">Benötigte Features:</label>
+        <div class="col-sm-2">
+            <select id="feat" class="form-control" ng-model="empInfo.features"  multiple ng-multiple="true">
+                <option value="testfeature">testfeature</option>
+                <option value="feature">feature</option>
+            </select>
+        </div>
+        <div class="col-sm-7"></div>
+    </div>
     <!--Contraints: Java muss größer sein als VErsion 7.4... , Qualitätsattribute, derzeit eingesetzte Technologien -->
-    <div class="form-group">
-        <button class="btn btn-warning" ng-disabled="empList.$invalid" ng-click="pressEmpf(empInfo)">Empfehlung erhalten</button>
-    </div>
+
+    <input type="submit" value="Empfehlung erhalten" class="btn btn-primary col-sm-offset-3"  ng-click="pressEmpf(empInfo)"/>
+    <input type="reset" value="Zurücksetzen" ng-click="resetForm()" class="btn" /> <br/>
 </form>
+
+
+<div id="ergebnis" hidden>
+    <h3 class="text-center">Empfehlung</h3>
+    <span>{{anfrage.techs}}</span>
+    <tr ng-repeat="detail in anfrage| filter:search_query">
+        <td>
+            <span>{{detail.sprache}}</span></td>
+
+    </tr>
+</div>
+
+
+
+<!--    <div class="form-group">
+           <label for="firstName" class="col-sm-3 control-label">First Name</label>
+           <div class="col-sm-6">
+               <input type="text" id="firstName" class="form-control" ng-model="student.firstName" />
+           </div>
+           <div class="col-sm-3"></div>
+       </div>
+       <div class="form-group">
+           <label for="lastName" class="col-sm-3 control-label">Last Name</label>
+           <div class="col-sm-6">
+               <input type="text" id="lastName" class="form-control" ng-model="student.lastName" />
+           </div>
+           <div class="col-sm-3"></div>
+       </div>
+
+       <div class="form-group">
+           <label for="dob" class="col-sm-3 control-label">DoB</label>
+           <div class="col-sm-2">
+               <input type="date" id="dob" class="form-control" ng-model="student.DoB" />
+           </div>
+           <div class="col-sm-7"></div>
+       </div>-->
+<!-- <div class="col-sm-7">
+        <span><b>Main Subjects</b></span>
+        <div class="checkbox">
+            <label><input type="checkbox" ng-model="student.maths" />Maths</label>
+        </div>
+        <div class="checkbox">
+            <label><input type="checkbox" ng-model="student.physics" />Physics</label>
+        </div>
+        <div class="checkbox">
+            <label><input type="checkbox"  ng-model="student.chemistry" />Chemistry</label>
+        </div>
+    </div>-->
