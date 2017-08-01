@@ -47,8 +47,9 @@ crudApp.controller("DbController", function ($scope, $http) {
         .then(function (info) {
             // Stored the returned data into scope
             $scope.all = info;
-            //console.log(info);
-            //console.log($scope.all);
+
+            console.log(info);
+            console.log($scope.all);
         });
 });
 
@@ -104,7 +105,7 @@ crudApp.controller('MainCtrl', function ($scope, $http, $routeParams) {
         // Compute the data join. This returns the update selection.
         //Art der abhängigkeit
         //a1=direktionale, a2=austauschbare direktionale , a3= feature-direktiona, a4=optionale
-        marker = marker.data(["a1", "a2", "a3", "a4"]);
+        marker = marker.data(["Direktionale", "Feature-Direktionale", "Austauschbare-Direktionale", "Optionale"]);
         markerg = markerg.data(["g1", "g2", "g3", "g4"]);
 
         // Remove any outgoing/old markers.
@@ -255,7 +256,7 @@ crudApp.controller('MainCtrl', function ($scope, $http, $routeParams) {
                                 {
                                     source: source,
                                     target: relationen.data[i].tech_name,
-                                    type: "a" + relationen.data[i].ab_type
+                                    type: relationen.data[i].ab_type
                                 }
                             );
                         }
@@ -273,13 +274,26 @@ crudApp.controller('MainCtrl', function ($scope, $http, $routeParams) {
     }
 });
 
-//Erste Relationen holen, wenn keine vorhanden aufhören wenn vorhanden weitere holen
+
 
 //Tool
 crudApp.controller("toolController", function ($scope, $http){
 
+    $http.post('databaseFiles/getFeatureList.php')
+        .then(function (info) {
+          $scope.featureList=info.data;
+            console.log($scope.featureList);
+        });
+
+    $http.post('databaseFiles/getLanguageList.php')
+        .then(function (info) {
+          $scope.languageList=info.data;
+            console.log($scope.languageList);
+        });
+
     //Anfrage initalisieren
     $scope.anfrage="";
+    $scope.kriterien=0;
 
     //Ergebnis erst eziegen wenn Submit & vorher formular anzeigen
     $('#ergebnis').css('display', 'none');
@@ -300,16 +314,17 @@ crudApp.controller("toolController", function ($scope, $http){
 
         $scope.anfrage=myE;
         //Get all Technologies
-        $scope.solution =new Array;
-        getResult($scope.anfrage);
-        console.log($scope.solution);
-        getBestOf($scope.solution);
+        $scope.ergebnis = [];
 
+        getResult($scope.anfrage);
+        console.log($scope.ergebnis);
         //Formular nicht mehr anzeigen
         $('#empForm').css('display', 'none');
         //Ergebnis anzeigen
         $('#ergebnis').slideUp();
         $('#ergebnis').slideToggle();
+
+
 
         //Technologien nach Sprache durchsuchen
         //Technologien nach den Technologien durchsuchen
@@ -317,60 +332,95 @@ crudApp.controller("toolController", function ($scope, $http){
         //empfehlungsreihenfolge naach übereinstimmung der Kirertien
         //Wenn keine übereinstimmung keine Anzeige der technologie
     }
-
     function getResult(abfrage){
-        console.log(abfrage);
+        var languages=[];
+        var features=[];
+        for(var a=0; a < abfrage.language.length; a++){
+            languages[a]=abfrage.language[a];
 
+        }
+        for(var a=0; a < abfrage.features.length; a++){
+            features[a]=abfrage.features[a];
 
+        }
+        console.log(language);
+
+        //ToDo: Binding Languages
+        $scope.kriterien=$scope.kriterien+abfrage.language.length+abfrage.features.length;
+        //+abfrage.techs.length;
         //Sprache
-        $http.post('databaseFiles/getLanguage.php', abfrage.language)
+        $http.post('databaseFiles/getLanguage.php', language)
             .then(function (info) {
-                //Alle die Sprache beinhalten
+              console.log(info);
+                getRating(info);
+                console.log( $scope.ergebnis);
 
-                console.log(info.data);
-                for(var i=0; i < info.data.length; i++){
-                    console.log("work");
-                    $scope.solution[0]=info.data[i];
-                }
-
-
-                //console.log(info);
-                //console.log($scope.all);
-            });
-        //Sprache
-        $http.post('databaseFiles/getFeature.php', abfrage.features)
-            .then(function (info) {
-                //Alle die Sprache beinhalten
-                for(var i=0; i< info.data.length; i++){
-                    $scope.solution[i+1]=info.data[i];
-                }
-                //console.log(info);
-                //console.log($scope.all);
             });
 
+        //Sprache
+        $http.post('databaseFiles/getFeature.php', features)
+            .then(function (info) {
+                getRating(info);
+                console.log( $scope.ergebnis);
+
+
+            });
 
 
     }
-
-    function getBestOf(){
-        console.log("work it");
-        console.log($scope.solution);
-        console.log($scope.solution.length);
-        for(var i=0; i<$scope.solution.length; i++){
-            console.log($scope.solution.length);
-            for(var j=0; j<$scope.solution.length; j++){
-                console.log($scope.solution);
-                if($scope.solution[i].tech_name==$scope.solution[j].tech_name){
-                    if($scope.solution[i].empf){
-                        $scope.solution[i].empf++;
+    function getRating(info){
+        for(var i=0; i < info.data.length; i++){
+            var count=0;
+            for(var c in $scope.ergebnis){
+                count++;
+            }
+            //wenn schon tehcnologien vorhanden
+            if(count!=0){
+                //alle vorhanden technologien durchgehen
+                for(var sol in $scope.ergebnis){
+                    //wenn name gleich
+                    if($scope.ergebnis[sol].name==info.data[i].tech_name){
+                        var anzahl= $scope.ergebnis[sol].emp;
+                        anzahl++;
+                        $scope.ergebnis[sol].emp=anzahl;
+                        $scope.ergebnis[sol].dependsOn= "" + $scope.ergebnis[sol].dependsOn +", " +  info.data[i].dependsOnName;
                     }
                     else{
-                        $scope.solution[i].empf=0;
+                        $scope.ergebnis.push(
+                            {
+                                name: info.data[i].tech_name,
+                                id: info.data[i].tech_id,
+                                emp:1,
+                                dependsOn: info.data[i].dependsOnName
+                            });
                     }
-                    console.log("work it");
-                    $scope.solution.splice(j,1);
                 }
+            }
+            //wenn noch keine vorhanden
+            else{
+                $scope.ergebnis.push(
+                    {
+                        name: info.data[i].tech_name,
+                        id: info.data[i].tech_id,
+                        emp:1,
+                        dependsOn: info.data[i].dependsOnName
+                    });
             }
         }
     }
+    $scope.stars  = function stars(name,emp){
+        console.log("stars");
+        //console.log(name);
+            var prozent=0;
+            prozent=emp/$scope.kriterien;
+        var stars = prozent*5;
+        $('.'+name).rating('rate',stars);
+ /*       prozent=prozent*100;
+            console.log(prozent);
+            console.log(name);
+            $('#'+name).width(prozent+'%');*/
+
+    };
+
+
 });
