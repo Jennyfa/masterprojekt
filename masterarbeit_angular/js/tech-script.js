@@ -12,7 +12,7 @@ crudApp.config(['$routeProvider', function ($routeProvider) {
             controller: 'DbController'
         })
         .when('/techdetails/:techid/:param', {
-            templateUrl: 'templates/tech.details.html',
+            templateUrl: 'templates/techdetails.html',
             controller: 'detailController'
         })
         .when('/tool', {
@@ -41,32 +41,31 @@ crudApp.directive('goClick', function ($location) {
 
 //Technologien
 crudApp.controller("DbController", function ($scope, $http) {
-
     //Get all Technologies
     $http.post('databaseFiles/empDetails.php')
         .then(function (info) {
+            console.log(info);
             // Stored the returned data into scope
             $scope.all = info;
-
-            console.log(info);
-            console.log($scope.all);
         });
 });
 
 //TechnologieDetails
 crudApp.controller("detailController", function ($scope, $http, $routeParams) {
-    /*$scope.techdetails = ["Emil", "Tobias", "Linus"];*/
-    //console.log($routeParams.param)
+    console.log($routeParams.param)
     $http.post('databaseFiles/getTech.php', $routeParams.param)
         .then(function (info) {
             $scope.details = info;
+            console.log(info);
             $scope.details.data.links = new Array;
             $scope.details.data.links = $scope.details.data.tech_links.split(";");
-            //console.log($scope);
-
+            $scope.details.data.pros = new Array;
+            $scope.details.data.pros = $scope.details.data.tech_pro.split(";");
+            $scope.details.data.cons = new Array;
+            $scope.details.data.cons = $scope.details.data.tech_con.split(";");
         });
-
 });
+
 crudApp.controller('MainCtrl', function ($scope, $http, $routeParams) {
 
     var abhängigkeitsstufen = 2;
@@ -273,9 +272,6 @@ crudApp.controller('MainCtrl', function ($scope, $http, $routeParams) {
         });
     }
 });
-
-
-
 //Tool
 crudApp.controller("toolController", function ($scope, $http){
 
@@ -305,8 +301,8 @@ crudApp.controller("toolController", function ($scope, $http){
     //Wenn Projektart Neu, alte Technologien nicht anzeigen
     $('input[name="projektart"]').change(function () {
         var name = $(this).val();
-        if(name==="new"){$('#technologien').css('display', 'none');}
-        else{$('#technologien').css('display', 'block');}
+        if(name==="new"){$('.abfrage_alt').css('display', 'none');}
+        else{$('.abfrage_alt').css('display', 'block');}
     });
 
     //Ergebnis anzeigen
@@ -333,23 +329,32 @@ crudApp.controller("toolController", function ($scope, $http){
         //Wenn keine übereinstimmung keine Anzeige der technologie
     }
     function getResult(abfrage){
-        var languages=[];
-        var features=[];
+        var languages="";
+        var features="";
         for(var a=0; a < abfrage.language.length; a++){
-            languages[a]=abfrage.language[a];
-
+            if(a==0){
+                languages=languages + "'" + abfrage.language[a].tech_name+"'";
+            }
+            else{
+                languages=languages + ",'" + abfrage.language[a].tech_name+"'";
+            }
         }
         for(var a=0; a < abfrage.features.length; a++){
-            features[a]=abfrage.features[a];
-
+            if(a==0){
+                features=features + "'" + abfrage.features[a].f_name+"'";
+            }
+            else{
+                features=features + ",'" + abfrage.features[a].f_name+"'";
+            }
         }
-        console.log(language);
+        console.log(languages);
+        console.log(features);
 
         //ToDo: Binding Languages
         $scope.kriterien=$scope.kriterien+abfrage.language.length+abfrage.features.length;
         //+abfrage.techs.length;
         //Sprache
-        $http.post('databaseFiles/getLanguage.php', language)
+        $http.post('databaseFiles/getLanguage.php', languages)
             .then(function (info) {
               console.log(info);
                 getRating(info);

@@ -2,12 +2,13 @@
 <form class="form-horizontal" role="form" id="empForm">
     <h3 class="text-center">Entscheidungsunterstützung</h3>
     <!--ToDO: besseres multiselect-->
+    <!--ToDO: Hilfetexte-->
     <div class="form-group">
 
         <label for="language" class="col-sm-3 control-label">Handelt es sich um ein neues Projekt oder ein bestehendes?</label>
         <div class="col-sm-9">
             <div class="radio">
-                <label><input value="new" type="radio" name="projektart" ng-model="empInfo.projektart" />Neuimplementation</label>
+                <label><input value="new" type="radio" name="projektart" ng-model="empInfo.projektart" />Neuimplementierung</label>
             </div>
             <div class="radio">
                 <label><input value="old" type="radio" name="projektart" ng-model="empInfo.projektart" />Austausch</label>
@@ -23,18 +24,6 @@
         </div>
     </div>
 
-    <div class="form-group"  id="technologien">
-        <label for="techs" class="col-sm-3 control-label">Bereits eingesetzte Technologien:</label>
-        <div class="col-sm-3">
-            <select id="techs" class="form-control" ng-model="empInfo.techs"  multiple ng-multiple="true">
-                <option value="SAPUI5">SAPUI5</option>
-                <option value="OPENUI5">OPENUI5</option>
-                <option value="AngularJS">AngularJS</option>
-                <option value="KendoUI">Kendo UI</option>
-            </select>
-        </div>
-
-    </div>
 
     <div class="form-group"  id="features">
         <label for="feat" class="col-sm-3 control-label">Benötigte Features:</label>
@@ -43,12 +32,34 @@
             </select>
         </div>
 
-
-
-
     </div>
-    <!--Contraints: Java muss größer sein als VErsion 7.4... , Qualitätsattribute, derzeit eingesetzte Technologien -->
 
+        <div class="form-group abfrage_alt">
+
+            <label for="techs" class="col-sm-3 control-label">Bereits eingesetzte Technologien:</label>
+            <div class="col-sm-3">
+                <select id="techs" class="form-control" ng-model="empInfo.techs"  multiple ng-multiple="true">
+                    <option value="SAPUI5">SAPUI5</option>
+                    <option value="OPENUI5">OPENUI5</option>
+                    <option value="AngularJS">AngularJS</option>
+                    <option value="KendoUI">Kendo UI</option>
+                </select>
+            </div>
+
+        </div>
+
+    <div class="form-group abfrage_alt">
+        <label for="datenbank" class="col-sm-3 control-label">Welche Datenbank nutzen Sie:</label>
+        <div class="col-sm-3">
+            <select id="datenbank" class="form-control" ng-model="empInfo.datenbank"  multiple ng-multiple="true">
+                <option value="SAPHANA">SAP HANA</option>
+                <option value="OPENUI5">MySQL</option>
+            </select>
+        </div>
+    </div>
+
+
+    <!--Contraints: Java muss größer sein als VErsion 7.4... , Qualitätsattribute, derzeit eingesetzte Technologien -->
     <input type="submit" value="Empfehlung erhalten" class="btn btn-primary col-sm-offset-3"  ng-click="pressEmpf(empInfo)"/>
     <input type="reset" value="Zurücksetzen" ng-click="resetForm()" class="btn" /> <br/>
 </form>

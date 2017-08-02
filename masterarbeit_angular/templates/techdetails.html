@@ -7,20 +7,25 @@
             </div>
         </div>
         <!--ToDO: Logos miteinbauen-->
+        <!--ToDO: Tag für Category  miteinbauen-->
+
         <div class="row">
             <div class="col-lg-8">
                 <p>{{details.data.tech_desc}}</p><br/>
                 <div class="row">
                     <div class="col-lg-6">
                         <h4>Vorteile</h4>
-                        <p>{{details.data.tech_pro}}</p>
+                        <ul ng-repeat="pro in details.data.pros">
+                            <li>{{pro}}</li>
+                        </ul>
                     </div>
                     <div class="col-lg-6">
-                        <h4>Nachteile</h4>
-                        <p>{{details.data.tech_con}}</p>
+                        <ul ng-repeat="con in details.data.cons">
+                            <li>{{con}}</li>
+                        </ul>
                     </div>
                 </div>
-            </div>
+            </div> 
             <div class="col-lg-4">
                 <h4>Links</h4>
                 <ul ng-repeat="result in details.data.links">
