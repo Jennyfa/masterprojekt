@@ -43,6 +43,7 @@
                     <option value="OPENUI5">OPENUI5</option>
                     <option value="AngularJS">AngularJS</option>
                     <option value="KendoUI">Kendo UI</option>
+                    <option value="Hibernate">Hibernate</option>
                 </select>
             </div>
 
@@ -52,8 +53,9 @@
         <label for="datenbank" class="col-sm-3 control-label">Welche Datenbank nutzen Sie:</label>
         <div class="col-sm-3">
             <select id="datenbank" class="form-control" ng-model="empInfo.datenbank"  multiple ng-multiple="true">
-                <option value="SAPHANA">SAP HANA</option>
-                <option value="OPENUI5">MySQL</option>
+                <option value="SAP HANA">SAP HANA</option>
+                <option value="MySQL">MySQL</option>
+                <option value="DB2">DB2</option>
             </select>
         </div>
     </div>
@@ -93,6 +95,8 @@
 
                     </tr>
                     <!--ToDO: Logos miteinbauen-->
+                    <!--ToDO: Sortierung hinzufügen (Name, Rating)-->
+
                     <tr ng-repeat="detail in ergebnis| filter:search_query">
                         <td>
                             {{stars(detail.name,detail.emp)}} <input type="hidden" class="{{detail.name}}" data-readonly/>

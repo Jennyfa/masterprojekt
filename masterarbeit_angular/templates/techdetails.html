@@ -1,7 +1,7 @@
 <div class="row wrapper" id="techdetails">
     <div class="container wrapper ng-scope" id="details_tech_name">
         <h1>{{details.data.tech_name}}</h1>
-        <div class="row" ng-controller="MainCtrl">
+        <div class="row" ng-controller="MainController">
             <div class="col-lg-12 graph">
                 <nvd3 options="options" data="data" class="with-3d-shadow with-transitions"></nvd3>
             </div>
@@ -25,7 +25,7 @@
                         </ul>
                     </div>
                 </div>
-            </div> 
+            </div>
             <div class="col-lg-4">
                 <h4>Links</h4>
                 <ul ng-repeat="result in details.data.links">

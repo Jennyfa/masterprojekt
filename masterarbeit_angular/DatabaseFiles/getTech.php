@@ -1,4 +1,5 @@
 <?php
+//TODO; Umlautproblem
 // Including database connections
 require_once 'database_connections.php';
 // mysqli query to fetch all data from database
@@ -14,5 +15,5 @@ $result = mysqli_fetch_assoc(mysqli_query($con, $queryString));
 
 
 echo $json_info = json_encode($result);
-//echo $queryString;
+
 ?>

@@ -1,5 +1,8 @@
 // Application module
 'use strict';
+//ToDO: in Module aufteilen (https://docs.angularjs.org/guide/module)
+//ToDO: Testing & Perfomance test
+//ToDO: Bei Features noch zusammenfassen, welche Technologien zusammen verwendet werden können
 
 var crudApp = angular.module('crudApp', ['ngRoute']);
 
@@ -13,11 +16,11 @@ crudApp.config(['$routeProvider', function ($routeProvider) {
         })
         .when('/techdetails/:techid/:param', {
             templateUrl: 'templates/techdetails.html',
-            controller: 'detailController'
+            controller: 'DetailController'
         })
         .when('/tool', {
             templateUrl: 'templates/tool.html',
-            controller: 'toolController'
+            controller: 'ToolController'
         })
         .otherwise({
             redirectTo: '/'
@@ -51,22 +54,22 @@ crudApp.controller("DbController", function ($scope, $http) {
 });
 
 //TechnologieDetails
-crudApp.controller("detailController", function ($scope, $http, $routeParams) {
+crudApp.controller("DetailController", function ($scope, $http, $routeParams) {
     console.log($routeParams.param)
     $http.post('databaseFiles/getTech.php', $routeParams.param)
         .then(function (info) {
             $scope.details = info;
             console.log(info);
             $scope.details.data.links = new Array;
-            $scope.details.data.links = $scope.details.data.tech_links.split(";");
+            $scope.details.data.links = $scope.details.data.tech_links.split("|");
             $scope.details.data.pros = new Array;
-            $scope.details.data.pros = $scope.details.data.tech_pro.split(";");
+            $scope.details.data.pros = $scope.details.data.tech_pro.split("|");
             $scope.details.data.cons = new Array;
-            $scope.details.data.cons = $scope.details.data.tech_con.split(";");
+            $scope.details.data.cons = $scope.details.data.tech_con.split("|");
         });
 });
 
-crudApp.controller('MainCtrl', function ($scope, $http, $routeParams) {
+crudApp.controller('MainController', function ($scope, $http, $routeParams) {
 
     var abhängigkeitsstufen = 2;
     var width = $(".container").width(),
@@ -273,7 +276,7 @@ crudApp.controller('MainCtrl', function ($scope, $http, $routeParams) {
     }
 });
 //Tool
-crudApp.controller("toolController", function ($scope, $http){
+crudApp.controller("ToolController", function ($scope, $http){
 
     $http.post('databaseFiles/getFeatureList.php')
         .then(function (info) {
