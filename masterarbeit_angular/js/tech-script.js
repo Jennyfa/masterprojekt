@@ -3,13 +3,16 @@
 //ToDO: in Module aufteilen (https://docs.angularjs.org/guide/module)
 //ToDO: Testing & Perfomance test
 //ToDO: Bei Features noch zusammenfassen, welche Technologien zusammen verwendet werden können
+//ToDO: Warte Symbol
+
 
 var crudApp = angular.module('crudApp', ['ngRoute']);
 
 //Routing
 crudApp.config(['$routeProvider', function ($routeProvider) {
     $routeProvider
-        .when('/', {templateUrl: 'templates/start.html'})
+        .when('/', {
+            templateUrl: 'templates/start.html'})
         .when('/tech', {
             templateUrl: 'templates/tech.html',
             controller: 'DbController'
@@ -280,6 +283,7 @@ crudApp.controller("ToolController", function ($scope, $http){
 
     $http.post('databaseFiles/getFeatureList.php')
         .then(function (info) {
+            console.log(info);
           $scope.featureList=info.data;
             console.log($scope.featureList);
         });

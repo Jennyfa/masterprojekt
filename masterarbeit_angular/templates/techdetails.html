@@ -6,9 +6,11 @@
                 <nvd3 options="options" data="data" class="with-3d-shadow with-transitions"></nvd3>
             </div>
         </div>
+        <!--ToDO: version miteinbauen-->
         <!--ToDO: Logos miteinbauen-->
         <!--ToDO: Tag für Category  miteinbauen-->
-
+        <!--ToDO: Popup für weitere Informationen, mit Link zu der TEchnologie?-->
+        <!--ToDO: Beziehung mit ein bauen; Basiert auf, Nicht kompatibel (mit X in Linie?), Ermöglichung (vllt nur für Tool wichtig?), Empfehlung (vllt im Text?-->
         <div class="row">
             <div class="col-lg-8">
                 <p>{{details.data.tech_desc}}</p><br/>
@@ -20,6 +22,7 @@
                         </ul>
                     </div>
                     <div class="col-lg-6">
+                        <h4>Nachteile</h4>
                         <ul ng-repeat="con in details.data.cons">
                             <li>{{con}}</li>
                         </ul>
@@ -32,6 +35,8 @@
                     <li><a href="{{result}}" target="_blank">{{result}}</a></li>
                 </ul>
             </div>
+            <!--ToDO: Alternativen-->
+            <!--ToDO: Häufige Kombination-->
         </div>
     </div>
 </div>
