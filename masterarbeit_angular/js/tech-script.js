@@ -6,7 +6,7 @@
 //ToDO: Warte Symbol
 
 
-var crudApp = angular.module('crudApp', ['ngRoute']);
+var crudApp = angular.module('crudApp', ['ngRoute', 'ngMaterial']);
 
 //Routing
 crudApp.config(['$routeProvider', function ($routeProvider) {
@@ -54,6 +54,27 @@ crudApp.controller("DbController", function ($scope, $http) {
             // Stored the returned data into scope
             $scope.all = info;
         });
+
+    $scope.defineImage  = function defineImage(name, id){
+        var img = new Image();
+        var newstr=""+name;
+        newstr= newstr.replace(" ","");
+        var url="images/"+newstr+".png";
+        console.log(url);
+
+        img.onerror = img.onabort = function() {
+            $('#img_'+id).attr('src', "images/undefined.gif");
+            $('#img_'+id).css('display', 'none');
+            console.log(url+"nicht vorhanden");
+        };
+        img.onload = function() {
+            $('#img_'+id).attr('src', url);
+            $('#img_'+id).attr('alt', 'logo '+newstr);
+            console.log(url+" vorhanden");
+        };
+        img.src = url;
+    }
+
 });
 
 //TechnologieDetails
@@ -70,6 +91,33 @@ crudApp.controller("DetailController", function ($scope, $http, $routeParams) {
             $scope.details.data.cons = new Array;
             $scope.details.data.cons = $scope.details.data.tech_con.split("|");
         });
+
+    $http.post('databaseFiles/getBeziehung.php', $routeParams.techid)
+        .then(function (info) {
+            $scope.beziehung = info;
+
+        });
+
+    //ToDo: Daraus Service machen
+    $scope.defineImage  = function defineImage(name, id){
+        var img = new Image();
+        var newstr=""+name;
+        newstr= newstr.replace(" ","");
+        var url="images/"+newstr+".png";
+        console.log(url);
+
+        img.onerror = img.onabort = function() {
+            $('#img_'+id).attr('src', "images/undefined.gif");
+            $('#img_'+id).css('display', 'none');
+            console.log(url+"nicht vorhanden");
+        };
+        img.onload = function() {
+            $('#img_'+id).attr('src', url);
+            $('#img_'+id).attr('alt', 'logo '+newstr);
+            console.log(url+" vorhanden");
+        };
+        img.src = url;
+    }
 });
 
 crudApp.controller('MainController', function ($scope, $http, $routeParams) {
@@ -167,6 +215,15 @@ crudApp.controller('MainController', function ($scope, $http, $routeParams) {
             })
             .on("click", function (d) {
                 console.log(d3.select(this).data().map(function (d) {
+                    $mdDialog.show(
+                        $mdDialog.alert()
+                            .parent(angular.element(document.querySelector('#popupContainer')))
+                            .clickOutsideToClose(true)
+                            .title('This is an alert title')
+                            .textContent('You can specify some description text in here.')
+                            .ariaLabel('Alert Dialog Demo')
+                            .ok('Got it!')
+                    );
                     return d.name;
                 }));
             });

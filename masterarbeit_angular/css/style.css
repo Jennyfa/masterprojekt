@@ -285,6 +285,18 @@ text {
     color: silver;
 }
 
+.img_kasten{
+    max-width: 150px;
+    max-height: 150px;
+}
+.img_detail{
+    max-width: 100px;
+    max-height: 100px;
+}
+.img_small {
+    max-width: 35px;
+    max-height: 35px;
+}
 
 /*
 .star-ratings-sprite {

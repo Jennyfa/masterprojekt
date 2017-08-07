@@ -18,7 +18,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            <!--ToDO: Logos miteinbauen-->
+
             <!-- Table to show employee detalis -->
             <div class="table-responsive">
                 <!--<table class="table table-hover" ng-show="search_query">-->
@@ -31,8 +31,9 @@
                     </tr>
 
                     <tr ng-repeat="detail in all.data | filter:search_query">
-                        <td>
-                            <span>{{detail.tech_name}}</span></td>
+                        <td>{{defineImage(detail.tech_name, detail.tech_id)}}
+                            <img class="img_small" id="img_{{detail.tech_id}}"><span>
+                            {{detail.tech_name}}</span></td>
                         <!--ToDO: Tag für Category  miteinbauen-->
                         <td>
                             <!-- <a ng-href="#/techdetails/{{detail.tech_id}}">SAPUI5</a>-->
