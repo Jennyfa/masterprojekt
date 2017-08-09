@@ -213,56 +213,143 @@ footer .glyphicon {
 
 /* CHART */
 
+#legende{
+    position: absolute;
+    top: 140px;
+    width: 200px;
+}
+
+#legende p.text{
+    margin-left: 25px;
+    font-size: 11px;
+}
+
+#legende p.text_link{
+    margin-left: 25px;
+    font-size: 11px;
+    margin-top: -10px;
+    padding-left: 20px;
+}
+
+svg text{
+    text-shadow: none;
+    font: 400 12px Lato, sans-serif;
+}
+
+
+.kreis{
+
+    width: 20px;
+    height: 20px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    margin-bottom: 5px;
+
+}
+
+hr.link {
+    margin: 0px;
+    width:40px
+}
+
 line.nv-force-link{
     color:red;
-}.link {
+}
+
+.link {
      fill: none;
      stroke: #666;
      stroke-width: 1.5px;
  }
 
-#licensing {
-    fill: green;
-}
 
-.link.licensing {
-    stroke: green;
-}
-
-.link.resolved {
-    stroke-dasharray: 0,2 1;
-}
-
-
-.link.Direktionale {
+.link.Direktionale , hr.link.Direktionale  {
+    color:red;
     stroke: red;
+    background:red;
+    border:solid red 0px;
+    background-color:red;
+    height:2px;
 }
 .link.Feature-Direktionale {
     stroke-dasharray: 0,2 1;
     stroke: purple;
+    border:dashed purple 1px;
+
 }
 
 .link.Austauschbare-Direktionale {
     stroke-dasharray: 0,2 1;
     stroke: red;
+    border:dashed red 1px;
 }
 .link.Optionale {
     stroke-dasharray: 0,2 1;
     stroke: black;
+    border:dashed black 1px;
 }
+
+
+.link.basedOn , hr.link.basedOn  {
+    color:yellow;
+    stroke: yellow;
+    background:yellow;
+    border:solid yellow 0px;
+    background-color:yellow;
+    height:2px;
+}
+
+
+.link.notCompatible , hr.link.notCompatible  {
+    color:darkred;
+    stroke: darkred;
+    background:darkred;
+    border:solid darkred 0px;
+    background-color:darkred;
+    height:2px;
+}
+
+.link.notCompatible:after{
+    font-family: 'Glyphicons Halflings';
+    content: "\e014";
+    font-size: 16px;
+
+    position: relative;
+    top: -13px;
+    left: 10px;
+}
+
 
 
 .node.g1 {
-    fill:  rgb(0,176,240);
     r:30;
 }
 .node.g2 {
-    fill: rgb(49, 240, 230);
     r:20;
 }
 .node.g3 {
-    fill: rgb(65, 240, 166);
     r:10;
+}
+
+
+.library {
+    fill:  rgb(0,176,240);
+    background-color:rgb(0,176,240) ;
+}
+
+.Framework {
+    fill: rgb(111, 115, 240);
+    background-color:rgb(111, 115, 240);
+}
+
+.language {
+    fill: rgb(240, 239, 54);
+    background-color:rgb(240, 239, 54);
+}
+.Modul {
+    fill: rgb(240, 45, 228);
+    background-color:rgb(240, 45, 228);
 }
 
 
@@ -297,6 +384,28 @@ text {
     max-width: 35px;
     max-height: 35px;
 }
+
+#feedback{
+    background-color:rgb(0,176,240);
+    width: 150px;
+    border-radius: 5px;
+    color:white;
+}
+
+.label
+{
+    position: relative;
+    top:55px;
+    margin-right:3px;
+}
+
+#details_tech_name h1{
+    margin-right: 20px;
+    float:left
+}
+
+
+
 
 /*
 .star-ratings-sprite {

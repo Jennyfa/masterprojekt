@@ -1,4 +1,16 @@
 // Application module
+
+
+
+$(document).on('click', function(event) {
+    var target = $(event.target);
+
+    if (target.attr('id') !== 'feedback' && target.attr('id')!=="circle" && target.attr('id')!=="detail_link") {
+        $('#feedback').remove();
+    }
+});
+
+
 'use strict';
 //ToDO: in Module aufteilen (https://docs.angularjs.org/guide/module)
 //ToDO: Testing & Perfomance test
@@ -6,10 +18,11 @@
 //ToDO: Warte Symbol
 
 
-var crudApp = angular.module('crudApp', ['ngRoute', 'ngMaterial']);
-
+var crudApp = angular.module('crudApp', ['ngRoute','ui.bootstrap']);
+crudApp.filter('tel', function (){});
 //Routing
 crudApp.config(['$routeProvider', function ($routeProvider) {
+    //$locationProvider.hashPrefix('');
     $routeProvider
         .when('/', {
             templateUrl: 'templates/start.html'})
@@ -32,11 +45,9 @@ crudApp.config(['$routeProvider', function ($routeProvider) {
 crudApp.directive('goClick', function ($location) {
     return function (scope, element, attrs) {
         var path;
-
         attrs.$observe('goClick', function (val) {
             path = val;
         });
-
         element.bind('click', function () {
             scope.$apply(function () {
                 $location.path(path);
@@ -60,17 +71,15 @@ crudApp.controller("DbController", function ($scope, $http) {
         var newstr=""+name;
         newstr= newstr.replace(" ","");
         var url="images/"+newstr+".png";
-        console.log(url);
 
-        img.onerror = img.onabort = function() {
+         img.onabort = function() {
+
             $('#img_'+id).attr('src', "images/undefined.gif");
             $('#img_'+id).css('display', 'none');
-            console.log(url+"nicht vorhanden");
         };
         img.onload = function() {
             $('#img_'+id).attr('src', url);
             $('#img_'+id).attr('alt', 'logo '+newstr);
-            console.log(url+" vorhanden");
         };
         img.src = url;
     }
@@ -104,23 +113,24 @@ crudApp.controller("DetailController", function ($scope, $http, $routeParams) {
         var newstr=""+name;
         newstr= newstr.replace(" ","");
         var url="images/"+newstr+".png";
-        console.log(url);
 
         img.onerror = img.onabort = function() {
             $('#img_'+id).attr('src', "images/undefined.gif");
             $('#img_'+id).css('display', 'none');
-            console.log(url+"nicht vorhanden");
         };
         img.onload = function() {
             $('#img_'+id).attr('src', url);
             $('#img_'+id).attr('alt', 'logo '+newstr);
-            console.log(url+" vorhanden");
         };
         img.src = url;
     }
 });
 
-crudApp.controller('MainController', function ($scope, $http, $routeParams) {
+
+
+crudApp.controller('MainController', function ($scope, $http, $routeParams,  $sce) {
+
+
 
     var abhängigkeitsstufen = 2;
     var width = $(".container").width(),
@@ -138,7 +148,8 @@ crudApp.controller('MainController', function ($scope, $http, $routeParams) {
         circle = svg.append("g").selectAll("circle"),
         text = svg.append("g").selectAll("text"),
         marker = svg.append("defs").selectAll("marker"),
-        markerg = svg.append("defs").selectAll("markerg");
+        markerg = svg.append("defs").selectAll("markerg"),
+        markercat = svg.append("defs").selectAll("markercat");
     var nodes = {};
 
     function update(links) {
@@ -158,8 +169,9 @@ crudApp.controller('MainController', function ($scope, $http, $routeParams) {
         // Compute the data join. This returns the update selection.
         //Art der abhängigkeit
         //a1=direktionale, a2=austauschbare direktionale , a3= feature-direktiona, a4=optionale
-        marker = marker.data(["Direktionale", "Feature-Direktionale", "Austauschbare-Direktionale", "Optionale"]);
+        marker = marker.data(["Direktionale", "Feature-Direktionale", "Austauschbare-Direktionale", "Optionale",  "basedOn",  "notCompatible"]);
         markerg = markerg.data(["g1", "g2", "g3", "g4"]);
+        markercat = markercat.data(["Framework", "library", "Modul", "language"]);
 
         // Remove any outgoing/old markers.
         marker.exit().remove();
@@ -209,24 +221,23 @@ crudApp.controller('MainController', function ($scope, $http, $routeParams) {
         // Compute new attributes for entering and updating circles.
         circle
             .attr("r", 6)
+            .attr("id", "circle")
             .call(force.drag)
             .attr("class", function (d) {
-                return "node " + d.group;
+                return "node " + d.group + " " +d.cat;
             })
             .on("click", function (d) {
-                console.log(d3.select(this).data().map(function (d) {
-                    $mdDialog.show(
-                        $mdDialog.alert()
-                            .parent(angular.element(document.querySelector('#popupContainer')))
-                            .clickOutsideToClose(true)
-                            .title('This is an alert title')
-                            .textContent('You can specify some description text in here.')
-                            .ariaLabel('Alert Dialog Demo')
-                            .ok('Got it!')
-                    );
-                    return d.name;
-                }));
+                $('#feedback').remove();
+                console.log(d);
+                $("#pop").css('display','block');
+                $("#pop").append('<div id="feedback">'+d.name+'</br>'+
+                    '<button id="detail_link"  data-target="#techdetails" href="/techdetails/'+d.id+'/'+d.name+'">Details</button></div>');
+                $('#detail_link').click(function(){
+                    //todo:link
+                })
             });
+
+
 
         // -------------------------------
 
@@ -269,8 +280,17 @@ crudApp.controller('MainController', function ($scope, $http, $routeParams) {
     var nodes = [];
     var links = [];
     //Die ausgesucht Technologie
+
+
+    $http.post('databaseFiles/getTech.php', $routeParams.param)
+        .then(function (info) {
+            $scope.base = info;
+            nodes[$routeParams.param].cat=info.data.tech_cat;
+        });
+
+
     nodes[$routeParams.param] = (
-        {name: $routeParams.param, id: $routeParams.techid, cat: "framework", group: "g1"}
+        {name: $routeParams.param, id: $routeParams.techid, cat:"tec", group: "g1"}
     );
     var count = 0;
     //die ersten Abhängigkeiten für diese Technolgie
@@ -278,6 +298,13 @@ crudApp.controller('MainController', function ($scope, $http, $routeParams) {
     }, function (Error) {
         console.log(Error);
     });
+
+    function makeDiv(d) {
+        $scope.d=d;
+        console.log(d);
+
+    }
+
     function getData(id) {
         //Abhängigkeiten holen
         return new Promise(function (resolve, reject) {
@@ -292,12 +319,13 @@ crudApp.controller('MainController', function ($scope, $http, $routeParams) {
                         //Für Anzahl der Abhängigkeiten durchlaufen
                         for (var i = 0; i < relationen.data.length; i++) {
                             //Id in Array speichern
+                            console.log(relationen.data[i]);
                             arrayIDs[i] = relationen.data[i].tech_id;
                             nodes[relationen.data[i].tech_name] = (
                             {
                                 name: relationen.data[i].tech_name,
                                 id: relationen.data[i].tech_id,
-                                cat: "framework",
+                                cat: relationen.data[i].tech_cat,
                                 group: "g" + (count + 2),
                             }
                             );
@@ -314,11 +342,12 @@ crudApp.controller('MainController', function ($scope, $http, $routeParams) {
 
                                 }
                             }
+
                             links.push(
                                 {
                                     source: source,
                                     target: relationen.data[i].tech_name,
-                                    type: relationen.data[i].ab_type
+                                    type: relationen.data[i].type
                                 }
                             );
                         }
@@ -490,6 +519,32 @@ crudApp.controller("ToolController", function ($scope, $http){
             $('#'+name).width(prozent+'%');*/
 
     };
+    //ToDo: Daraus Service machen
+    $scope.defineImage  = function defineImage(name, id){
+        var img = new Image();
+        var newstr=""+name;
+        newstr= newstr.replace(" ","");
+        var url="images/"+newstr+".png";
+        console.log(url);
 
+        img.onerror = img.onabort = function() {
+            $('#img_'+id).attr('src', "images/undefined.gif");
+            $('#img_'+id).css('display', 'none');
+        };
+        img.onload = function() {
+            $('#img_'+id).attr('src', url);
+            $('#img_'+id).attr('alt', 'logo '+newstr);
+        };
+        img.src = url;
+    }
+
+    $scope.propertyName = 'rating';
+    $scope.reverse = true;
+
+
+    $scope.sortBy = function(propertyName) {
+        $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
+        $scope.propertyName = propertyName;
+    };
 
 });

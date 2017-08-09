@@ -3,17 +3,34 @@
 
         <h1> {{defineImage(details.data.tech_name, details.data.tech_id)}}
             <img class="img_detail" id="img_{{details.data.tech_id}}">{{details.data.tech_name}}</h1>
+        <span class="label label-warning" uib-tooltip="Version">{{details.data.tech_version}}</span><span class="label label-info" uib-tooltip="Kategorien">{{details.data.tech_cat}}</span>
+        <br/>
+        <div id="legende">
+            <b>Kategorie</b>
+            <div  class="kreis Framework"> <p class="text">Framework</p></div>
+            <div  class="kreis library"> <p class="text">Bibliothek</p></div>
+            <div  class="kreis language"><p class="text"> Programmiersprache</p></div>
+            <div  class="kreis Modul"> <p class="text">Modul</p></div>
+         <b>Abhängigkeit</b><br/>
+            <hr class="link Direktionale "> <p class="text_link">Direktionale</p>
+            <hr class="link Feature-Direktionale"> <p class="text_link">Feature</p>
+            <hr class="link Austauschbare-Direktionale"><p class="text_link">Austauschbare</p>
+            <hr class="link Optionale "><p class="text_link">Optionale</p>
+            <b>Beziehung</b><br/>
+            <hr class="link basedOn "> <p class="text_link">Basiert auf</p>
+            <hr class="link notCompatible "> <p class="text_link">Nicht Kompatibel </p>
+        </div>
+
         <div class="row" ng-controller="MainController">
             <div class="col-lg-12 graph">
                 <nvd3 options="options" data="data" class="with-3d-shadow with-transitions"></nvd3>
             </div>
+        <div id="pop" hidden>  <p ng-bind="d"></p></div>
 
         </div>
-        <!--ToDO: version miteinbauen-->
-        <!--ToDO: Tag für Category  miteinbauen-->
-        <!--ToDO: Popup für weitere Informationen, mit Link zu der TEchnologie?-->
-        <!--ToDO: Beziehung mit ein bauen; Basiert auf, Nicht kompatibel (mit X in Linie?), Ermöglichung (vllt nur für Tool wichtig?), Empfehlung (vllt im Text?-->
-        <div class="row">
+
+        <!--ToDO:  X in Linie für micht kompatibel-->
+            <div class="row">
             <div class="col-lg-8">
                 <p>{{details.data.tech_desc}}</p><br/>
                 <div class="row">
@@ -38,7 +55,7 @@
                 </ul>
             </div>
 
-        </div>
+        </div><br>
         <div class="row">
             <div class="col-lg-12">
                 <h4>Häufige Kombinationen</h4>
@@ -48,8 +65,47 @@
                         <img class="img_kasten" id="img_{{kombi.tech_id}}">
                     </div>
                 </div>
+                <div ng-if="(beziehung.data | filter : {b_type: 'Kombination'})== null || (beziehung.data | filter : {b_type: 'Kombination'}).length === 0">
+
+                      Keine häufigen Kombinationen vorhanden
+
+                </div>
+
+            </div>
+        </div><br>
+        <div class="row ">
+            <div class="col-lg-6">
+                <h4>Empfehlung durch Entwickler</h4>
+                <div class="row" ng-repeat="empfehl in beziehung.data | filter : {b_type: 'Empfehlung'}">
+                    <div class="col-md-2">
+                        {{defineImage(empfehl.tech_name, empfehl.tech_id)}}
+                        <img class="img_kasten" id="img_{{empfehl.tech_id}}"><b ng-if="!empfehl.tech_name">NONE</b>
+                    </div>
+
+                </div>
+                <div ng-if="(beziehung.data | filter : {b_type: 'Empfehlung'})== null || (beziehung.data | filter : {b_type: 'Empfehlung'}).length === 0">
+
+                        Keine Empfehlungen vorhanden
+
+                </div>
+
+            </div>
+            <div class="col-lg-6">
+                <h4>Ermöglicht diese Technologien</h4>
+                <div class="row" ng-repeat="erm in beziehung.data | filter : {b_type: 'Ermöglichung'}">
+                    <div class="col-md-2">
+                        {{defineImage(erm.tech_name, erm.tech_id)}}
+                        <img class="img_kasten" id="img_{{erm.tech_id}}">
+                    </div>
+                </div>
+                <div ng-if="(beziehung.data | filter : {b_type: 'Ermöglichung'})== null || (beziehung.data | filter : {b_type: 'Ermöglichung'}).length === 0">
+
+                        Keine Technologien vorhanden die durch {{details.data.tech_name}} ermöglicht werden.
+
+                </div>
             </div>
         </div>
+        <br>
         <div class="row ">
             <div class="col-lg-12">
                 <h4>Alternativen</h4>
@@ -60,8 +116,13 @@
                         <img class="img_kasten" id="img_{{alt.tech_id}}">
                         </div>
                 </div>
+                <div ng-if="(beziehung.data | filter : {b_type: 'Alternative'})== null || (beziehung.data | filter : {b_type: 'Alternative'}).length === 0">
+
+                    Keine Alternativen vorhanden.
+
+                </div>
             </div>
-        </div>
+        </div><br><br>
     </div>
 </div>
 

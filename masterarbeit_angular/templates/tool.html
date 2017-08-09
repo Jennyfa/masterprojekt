@@ -89,23 +89,31 @@
                 <!--<table class="table table-hover" ng-show="search_query">-->
                 <table class="table table-hover">
                     <tr>
-                        <th>Rating</th>
-                        <th>Technologie</th>
-                        <th>Übereinstimmung</th>
+                        <th>Rating <span
+                                class="glyphicon glyphicon-sort" ng-click="sortBy('rating')"></span>
+                            <span class="sortorder" ng-show="propertyName === 'rating'" ng-class="{reverse: reverse}"></span></th>
+                        <th>Technologie <span
+                                class="glyphicon glyphicon-sort" ng-click="sortBy('name')"></span>
+                            <span class="sortorder" ng-show="propertyName === 'name'" ng-class="{reverse: reverse}"></span>
+                            </th>
+                        <th>Übereinstimmung <span
+                            class="glyphicon glyphicon-sort" ng-click="sortBy('ueber')"></span>
+                            <span class="sortorder" ng-show="propertyName === 'ueber'" ng-class="{reverse: reverse}"></span></th>
                         <th>Details</th>
 
                     </tr>
-                    <!--ToDO: Logos miteinbauen-->
-                    <!--ToDO: Sortierung hinzufügen (Name, Rating)-->
 
-                    <tr ng-repeat="detail in ergebnis| filter:search_query">
+
+
+                    <tr ng-repeat="detail in ergebnis| filter:search_query | orderBy:propertyName:reverse">
                         <td>
                             {{stars(detail.name,detail.emp)}} <input type="hidden" class="{{detail.name}}" data-readonly/>
                          <!-- <div class="star-ratings-sprite">{{stars(detail.name,detail.emp)}}<span id="{{detail.name}}" class="star-ratings-sprite-rating"></span></div>-->
                             <span>{{detail.emp}} von {{kriterien}}</span>
                         </td>
                         <td>
-                            <span>{{detail.name}}</span>
+                            {{defineImage(detail.name, detail.id)}}
+                            <img class="img_small" id="img_{{detail.id}}"> <span>{{detail.name}}</span>
                         </td>
                         <td>
                             <span>{{detail.dependsOn}}</span>

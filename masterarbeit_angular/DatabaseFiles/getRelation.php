@@ -14,8 +14,17 @@ $str= str_replace("]", "", $str);;
 
 //$query = "SELECT  tech_name, tech_id, a.ab_type,  r.r_ab_id, r.r_tech_id FROM (technologien t LEFT JOIN
 //relationen r  ON t.tech_id = r.von_tech_id) INNER JOIN abhaengigkeiten a ON r.r_ab_id=a.ab_id  WHERE r.r_tech_id IN (".$str.")";
-$query = "SELECT  tech_name, tech_id, a.ab_type, a.t_id, a.dependsOn FROM technologien t LEFT JOIN
-abhaengigkeiten a  ON t.tech_id = a.dependsOn  WHERE a.t_id IN (".$str.")";
+//$query = "SELECT  tech_name, tech_id, tech_cat, a.ab_type, a.t_id, a.dependsOn FROM technologien t LEFT JOIN
+//abhaengigkeiten a  ON t.tech_id = a.dependsOn  WHERE a.t_id IN (".$str.")";
+$query = "(
+SELECT  tech_name, tech_id, tech_cat, a.ab_type  as 'type', a.t_id, a.dependsOn
+FROM technologien t 
+LEFT JOIN
+abhaengigkeiten a  ON t.tech_id = a.dependsOn WHERE a.t_id IN (".$str."))UNION 
+(SELECT  tech_name, tech_id, tech_cat, b.b_type as 'type', b.t_id, b.dependsOn 
+FROM technologien t2 
+LEFT JOIN
+beziehungen b  ON t2.tech_id = b.dependsOn  WHERE b.t_id IN (".$str.") AND b.b_type IN ('basedOn', 'notCompatible'))";
 
 //$query = "SELECT  t.tech_name, t.tech_id  a.ab_type,  r.r_ab_id FROM (technologien t LEFT JOIN relationen r  ON t.tech_id = r.von_tech_id) INNER JOIN abhaengigkeiten a ON r.r_ab_id=a.ab_id WHERE r.r_tech_id IN (".$str.")";
 
