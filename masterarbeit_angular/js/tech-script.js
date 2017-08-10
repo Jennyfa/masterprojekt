@@ -55,7 +55,6 @@ crudApp.directive('goClick', function ($location) {
         });
     };
 });
-
 //Technologien
 crudApp.controller("DbController", function ($scope, $http) {
     //Get all Technologies
@@ -85,7 +84,6 @@ crudApp.controller("DbController", function ($scope, $http) {
     }
 
 });
-
 //TechnologieDetails
 crudApp.controller("DetailController", function ($scope, $http, $routeParams) {
     console.log($routeParams.param)
@@ -125,9 +123,6 @@ crudApp.controller("DetailController", function ($scope, $http, $routeParams) {
         img.src = url;
     }
 });
-
-
-
 crudApp.controller('MainController', function ($scope, $http, $routeParams,  $sce) {
 
 
@@ -364,20 +359,25 @@ crudApp.controller('MainController', function ($scope, $http, $routeParams,  $sc
         });
     }
 });
+
 //Tool
 crudApp.controller("ToolController", function ($scope, $http){
 
+    //alle Features
     $http.post('databaseFiles/getFeatureList.php')
         .then(function (info) {
-            console.log(info);
           $scope.featureList=info.data;
-            console.log($scope.featureList);
         });
-
+    //alle Sprachen
     $http.post('databaseFiles/getLanguageList.php')
         .then(function (info) {
           $scope.languageList=info.data;
-            console.log($scope.languageList);
+        });
+
+    //alle Technologien ohne Sprachen
+    $http.post('databaseFiles/getTechwithoutLangList.php')
+        .then(function (info) {
+            $scope.techsList=info.data;
         });
 
     //Anfrage initalisieren
@@ -422,47 +422,70 @@ crudApp.controller("ToolController", function ($scope, $http){
         //Wenn keine übereinstimmung keine Anzeige der technologie
     }
     function getResult(abfrage){
-        var languages="";
-        var features="";
-        for(var a=0; a < abfrage.language.length; a++){
-            if(a==0){
-                languages=languages + "'" + abfrage.language[a].tech_name+"'";
-            }
-            else{
-                languages=languages + ",'" + abfrage.language[a].tech_name+"'";
-            }
-        }
-        for(var a=0; a < abfrage.features.length; a++){
-            if(a==0){
-                features=features + "'" + abfrage.features[a].f_name+"'";
-            }
-            else{
-                features=features + ",'" + abfrage.features[a].f_name+"'";
-            }
-        }
-        console.log(languages);
-        console.log(features);
 
-        //ToDo: Binding Languages
+
         $scope.kriterien=$scope.kriterien+abfrage.language.length+abfrage.features.length;
-        //+abfrage.techs.length;
-        //Sprache
-        $http.post('databaseFiles/getLanguage.php', languages)
-            .then(function (info) {
-              console.log(info);
-                getRating(info);
-                console.log( $scope.ergebnis);
+        //Todo: +abfrage.techs.length;
 
-            });
+        //Wenn Implementierung
+        if(abfrage.projektart=='new'){
+            var languages=makeStringName(abfrage.language);
+            var features=makeStringFeature(abfrage.features);
+            //Sprache
+            $http.post('databaseFiles/getLanguage.php', languages)
+                .then(function (info) {
+                    console.log(info);
+                    getRating(info);
+                    console.log( $scope.ergebnis);
 
-        //Sprache
-        $http.post('databaseFiles/getFeature.php', features)
-            .then(function (info) {
-                getRating(info);
-                console.log( $scope.ergebnis);
+                });
+
+            //Features
+            $http.post('databaseFiles/getFeature.php', features)
+                .then(function (info) {
+                    getRating(info);
+                    console.log( $scope.ergebnis);
+                });
+            console.log("Ich versuchs");
+        }
+
+        //Wenn Austausch
+        else {
+
+            //vorhandene Technologien besitzen alles was man braucht
+            //welche sind die neuen Features
+
+            //prüfen wo sich Array unterscheidet
+            /*abfrage.features = ($.grep(abfrage.features, function(el) {
+                return $.inArray(el, abfrage.features_alt) === -1;
+            })).concat($.grep(abfrage.features_alt, function(el) {
+                return $.inArray(el, abfrage.features) === -1;
+            }));*/
+
+            //prüfen ob verwendete Technologien Features hat
+            //1. Fall Technologie hat die von zuhasue aus
+
+            //alle neuen Features die in Technologie vorhanden sind
+            var technologien_alt=makeStringName(abfrage.techs);
+            var features=makeStringFeature(abfrage.features);
+            var zusammen="" +technologien_alt+";"+features;
+            $http.post('databaseFiles/getFeaturesOfTechs.php', zusammen)
+                .then(function (info) {
+
+                });
+
+            //2. Fall benötigt weitere Technologie dazu (siehe vorhandene Technologie kann ergänzt werden
 
 
-            });
+
+            //vorhandene Technologien können ergänzt werden
+
+            //vorhandene Technologien können ausgetauscht werden
+
+            //vorhandene Technologien müssen ausgetauscht werden
+
+        }
+
 
 
     }
@@ -506,6 +529,31 @@ crudApp.controller("ToolController", function ($scope, $http){
             }
         }
     }
+    function makeStringName(daten){
+        var newString="";
+        for(var a=0; a < daten.length; a++){
+            if(a==0){
+                newString=newString + "'" + daten[a].tech_name+"'";
+            }
+            else{
+                newString=newString + ",'" + daten[a].tech_name+"'";
+            }
+        }
+        return newString;
+    }
+    function makeStringFeature(daten){
+        var newString="";
+        for(var a=0; a < daten.length; a++){
+            if(a==0){
+                newString=newString + "'" + daten[a].f_name+"'";
+            }
+            else{
+                newString=newString + ",'" + daten[a].f_name+"'";
+            }
+        }
+        return newString;
+    }
+
     $scope.stars  = function stars(name,emp){
         console.log("stars");
         //console.log(name);

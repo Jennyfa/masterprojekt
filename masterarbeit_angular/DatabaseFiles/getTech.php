@@ -7,7 +7,8 @@ require_once 'database_connections.php';
 $data = file_get_contents("php://input");
 
 // Escaping special characters from updated data
-$queryString = "SELECT tech_name, tech_id, tech_desc, tech_links, tech_con, tech_cat, tech_pro, tech_version from technologien WHERE tech_name='".$data."'";
+$queryString = "SELECT tech_name, tech_id, tech_desc, tech_links, tech_con, tech_cat, tech_pro, tech_version 
+FROM technologien WHERE tech_name='".$data."'";
 
 $result = mysqli_fetch_assoc(mysqli_query($con, $queryString));
 //$result = mysqli_fetch_assoc(mysqli_query($con, $queryString));

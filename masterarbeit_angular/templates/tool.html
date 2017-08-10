@@ -3,6 +3,8 @@
     <h3 class="text-center">Entscheidungsunterstützung</h3>
     <!--ToDO: besseres multiselect-->
     <!--ToDO: Hilfetexte-->
+    <!--ToDO: In Ergebnis Asuwahl anzeigen, als Badges mit x? -->
+    <!--ToDO: 'Keine Angabe' abfangen -->
     <div class="form-group">
 
         <label for="language" class="col-sm-3 control-label">Handelt es sich um ein neues Projekt oder ein bestehendes?</label>
@@ -17,7 +19,7 @@
     </div>
 
     <div class="form-group">
-        <label for="language" class="col-sm-3 control-label">Bekannte Programmiersprachen</label>
+        <label for="language" class="col-sm-3 control-label">Welche Programmiersprachen sind dem Team bekannt?</label>
         <div class="col-sm-3">
             <select id="language" class="form-control" ng-model="empInfo.language"  multiple ng-multiple="true" ng-options="language.tech_name for language in languageList" >
             </select>
@@ -26,7 +28,7 @@
 
 
     <div class="form-group"  id="features">
-        <label for="feat" class="col-sm-3 control-label">Benötigte Features:</label>
+        <label for="feat" class="col-sm-3 control-label">Welche neuen Features werden benötigt:</label>
         <div class="col-sm-3">
             <select id="feat" class="form-control" ng-model="empInfo.features"  multiple ng-multiple="true" ng-options="feature.f_name for feature in featureList" >
             </select>
@@ -36,22 +38,28 @@
 
         <div class="form-group abfrage_alt">
 
-            <label for="techs" class="col-sm-3 control-label">Bereits eingesetzte Technologien:</label>
+            <label for="techs" class="col-sm-3 control-label">Welche Technologien werden eingesetzt:</label>
             <div class="col-sm-3">
-                <select id="techs" class="form-control" ng-model="empInfo.techs"  multiple ng-multiple="true">
-                    <option value="SAPUI5">SAPUI5</option>
-                    <option value="OPENUI5">OPENUI5</option>
-                    <option value="AngularJS">AngularJS</option>
-                    <option value="KendoUI">Kendo UI</option>
-                    <option value="Hibernate">Hibernate</option>
+                <select id="techs" class="form-control" ng-model="empInfo.techs"  multiple ng-multiple="true" ng-options="techs.tech_name for techs in techsList" >
                 </select>
+
             </div>
 
         </div>
-    <!--ToDO: Welche Features dieser Technologien-->
+
+
+    <div class="form-group  abfrage_alt"  id="features_alt">
+        <label for="feat_alt" class="col-sm-3 control-label">Welche Features werden bereits genutzt:</label>
+        <div class="col-sm-3">
+            <select id="feat_alt" class="form-control" ng-model="empInfo.features_alt"  multiple ng-multiple="true" ng-options="feature.f_name for feature in featureList" >
+            </select>
+        </div>
+
+    </div>
+
 
     <div class="form-group abfrage_alt">
-        <label for="datenbank" class="col-sm-3 control-label">Welche Datenbank nutzen Sie:</label>
+        <label for="datenbank" class="col-sm-3 control-label">Welche Datenbank wird genutzt:</label>
         <div class="col-sm-3">
             <select id="datenbank" class="form-control" ng-model="empInfo.datenbank"  multiple ng-multiple="true">
                 <option value="SAP HANA">SAP HANA</option>
