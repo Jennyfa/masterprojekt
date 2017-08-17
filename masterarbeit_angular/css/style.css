@@ -392,10 +392,14 @@ text {
     color:white;
 }
 
-.label
+#details_tech_name .label
 {
     position: relative;
     top:55px;
+    margin-right:3px;
+}
+.label
+{
     margin-right:3px;
 }
 
@@ -404,7 +408,9 @@ text {
     float:left
 }
 
-
+.hoehe{
+    line-height: 35px;
+}
 
 
 /*

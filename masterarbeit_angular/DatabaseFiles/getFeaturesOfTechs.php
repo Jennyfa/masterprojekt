@@ -11,7 +11,7 @@ $teile = explode(";", $data);
 
 // Escaping special characters from updated data
 //Selektiere alle tech_features, die zu features gehören und der ausgewählten Technologie angehören
-$query = "SELECT f2.f_name, t.tech_name AS 'dependsOnTechnologie' FROM technologien t 
+$query = "SELECT f2.f_name AS 'dependsOnName', t.tech_name  FROM technologien t 
 LEFT JOIN tech_features tf  ON t.tech_id=tf.belongsTo 
 LEFT JOIN feature f2  ON f2.f_id=tf.isLike
 WHERE tf.isLike IN (SELECT f.f_id FROM feature f WHERE f.f_name IN ($teile[1]))

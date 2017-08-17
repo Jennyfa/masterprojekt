@@ -1,11 +1,10 @@
 // Application module
 
 
-
-$(document).on('click', function(event) {
+$(document).on('click', function (event) {
     var target = $(event.target);
 
-    if (target.attr('id') !== 'feedback' && target.attr('id')!=="circle" && target.attr('id')!=="detail_link") {
+    if (target.attr('id') !== 'feedback' && target.attr('id') !== "circle" && target.attr('id') !== "detail_link") {
         $('#feedback').remove();
     }
 });
@@ -18,14 +17,16 @@ $(document).on('click', function(event) {
 //ToDO: Warte Symbol
 
 
-var crudApp = angular.module('crudApp', ['ngRoute','ui.bootstrap']);
-crudApp.filter('tel', function (){});
+var crudApp = angular.module('crudApp', ['ngRoute', 'ui.bootstrap']);
+crudApp.filter('tel', function () {
+});
 //Routing
 crudApp.config(['$routeProvider', function ($routeProvider) {
     //$locationProvider.hashPrefix('');
     $routeProvider
         .when('/', {
-            templateUrl: 'templates/start.html'})
+            templateUrl: 'templates/start.html'
+        })
         .when('/tech', {
             templateUrl: 'templates/tech.html',
             controller: 'DbController'
@@ -58,27 +59,27 @@ crudApp.directive('goClick', function ($location) {
 //Technologien
 crudApp.controller("DbController", function ($scope, $http) {
     //Get all Technologies
-    $http.post('databaseFiles/empDetails.php')
+    $http.get('DatabaseFiles/empDetails.php')
         .then(function (info) {
             console.log(info);
             // Stored the returned data into scope
             $scope.all = info;
         });
 
-    $scope.defineImage  = function defineImage(name, id){
+    $scope.defineImage = function defineImage(name, id) {
         var img = new Image();
-        var newstr=""+name;
-        newstr= newstr.replace(" ","");
-        var url="images/"+newstr+".png";
+        var newstr = "" + name;
+        newstr = newstr.replace(" ", "");
+        var url = "images/" + newstr + ".png";
 
-         img.onabort = function() {
+        img.onabort = function () {
 
-            $('#img_'+id).attr('src', "images/undefined.gif");
-            $('#img_'+id).css('display', 'none');
+            $('#img_' + id).attr('src', "images/undefined.gif");
+            $('#img_' + id).css('display', 'none');
         };
-        img.onload = function() {
-            $('#img_'+id).attr('src', url);
-            $('#img_'+id).attr('alt', 'logo '+newstr);
+        img.onload = function () {
+            $('#img_' + id).attr('src', url);
+            $('#img_' + id).attr('alt', 'logo ' + newstr);
         };
         img.src = url;
     }
@@ -87,7 +88,7 @@ crudApp.controller("DbController", function ($scope, $http) {
 //TechnologieDetails
 crudApp.controller("DetailController", function ($scope, $http, $routeParams) {
     console.log($routeParams.param)
-    $http.post('databaseFiles/getTech.php', $routeParams.param)
+    $http.get('DatabaseFiles/getTech.php', $routeParams.param)
         .then(function (info) {
             $scope.details = info;
             console.log(info);
@@ -99,32 +100,31 @@ crudApp.controller("DetailController", function ($scope, $http, $routeParams) {
             $scope.details.data.cons = $scope.details.data.tech_con.split("|");
         });
 
-    $http.post('databaseFiles/getBeziehung.php', $routeParams.techid)
+    $http.get('DatabaseFiles/getBeziehung.php', $routeParams.techid)
         .then(function (info) {
             $scope.beziehung = info;
 
         });
 
     //ToDo: Daraus Service machen
-    $scope.defineImage  = function defineImage(name, id){
+    $scope.defineImage = function defineImage(name, id) {
         var img = new Image();
-        var newstr=""+name;
-        newstr= newstr.replace(" ","");
-        var url="images/"+newstr+".png";
+        var newstr = "" + name;
+        newstr = newstr.replace(" ", "");
+        var url = "images/" + newstr + ".png";
 
-        img.onerror = img.onabort = function() {
-            $('#img_'+id).attr('src', "images/undefined.gif");
-            $('#img_'+id).css('display', 'none');
+        img.onerror = img.onabort = function () {
+            $('#img_' + id).attr('src', "images/undefined.gif");
+            $('#img_' + id).css('display', 'none');
         };
-        img.onload = function() {
-            $('#img_'+id).attr('src', url);
-            $('#img_'+id).attr('alt', 'logo '+newstr);
+        img.onload = function () {
+            $('#img_' + id).attr('src', url);
+            $('#img_' + id).attr('alt', 'logo ' + newstr);
         };
         img.src = url;
     }
 });
-crudApp.controller('MainController', function ($scope, $http, $routeParams,  $sce) {
-
+crudApp.controller('MainController', function ($scope, $http, $routeParams, $sce) {
 
 
     var abhängigkeitsstufen = 2;
@@ -164,7 +164,7 @@ crudApp.controller('MainController', function ($scope, $http, $routeParams,  $sc
         // Compute the data join. This returns the update selection.
         //Art der abhängigkeit
         //a1=direktionale, a2=austauschbare direktionale , a3= feature-direktiona, a4=optionale
-        marker = marker.data(["Direktionale", "Feature-Direktionale", "Austauschbare-Direktionale", "Optionale",  "basedOn",  "notCompatible"]);
+        marker = marker.data(["Direktionale", "Feature-Direktionale", "Austauschbare-Direktionale", "Optionale", "basedOn", "notCompatible"]);
         markerg = markerg.data(["g1", "g2", "g3", "g4"]);
         markercat = markercat.data(["Framework", "library", "Modul", "language"]);
 
@@ -219,19 +219,18 @@ crudApp.controller('MainController', function ($scope, $http, $routeParams,  $sc
             .attr("id", "circle")
             .call(force.drag)
             .attr("class", function (d) {
-                return "node " + d.group + " " +d.cat;
+                return "node " + d.group + " " + d.cat;
             })
             .on("click", function (d) {
                 $('#feedback').remove();
                 console.log(d);
-                $("#pop").css('display','block');
-                $("#pop").append('<div id="feedback">'+d.name+'</br>'+
-                    '<button id="detail_link"  data-target="#techdetails" href="/techdetails/'+d.id+'/'+d.name+'">Details</button></div>');
-                $('#detail_link').click(function(){
+                $("#pop").css('display', 'block');
+                $("#pop").append('<div id="feedback">' + d.name + '</br>' +
+                    '<button id="detail_link"  data-target="#techdetails" href="/techdetails/' + d.id + '/' + d.name + '">Details</button></div>');
+                $('#detail_link').click(function () {
                     //todo:link
                 })
             });
-
 
 
         // -------------------------------
@@ -277,15 +276,15 @@ crudApp.controller('MainController', function ($scope, $http, $routeParams,  $sc
     //Die ausgesucht Technologie
 
 
-    $http.post('databaseFiles/getTech.php', $routeParams.param)
+    $http.get('DatabaseFiles/getTech.php', $routeParams.param)
         .then(function (info) {
             $scope.base = info;
-            nodes[$routeParams.param].cat=info.data.tech_cat;
+            nodes[$routeParams.param].cat = info.data.tech_cat;
         });
 
 
     nodes[$routeParams.param] = (
-        {name: $routeParams.param, id: $routeParams.techid, cat:"tec", group: "g1"}
+    {name: $routeParams.param, id: $routeParams.techid, cat: "tec", group: "g1"}
     );
     var count = 0;
     //die ersten Abhängigkeiten für diese Technolgie
@@ -295,7 +294,7 @@ crudApp.controller('MainController', function ($scope, $http, $routeParams,  $sc
     });
 
     function makeDiv(d) {
-        $scope.d=d;
+        $scope.d = d;
         console.log(d);
 
     }
@@ -303,7 +302,7 @@ crudApp.controller('MainController', function ($scope, $http, $routeParams,  $sc
     function getData(id) {
         //Abhängigkeiten holen
         return new Promise(function (resolve, reject) {
-            $http.post('databaseFiles/getRelation.php', id)
+            $http.post('DatabaseFiles/getRelation.php', id)
                 .then(function (info) {
                     var relationen = info;
                     console.log(info);
@@ -361,28 +360,28 @@ crudApp.controller('MainController', function ($scope, $http, $routeParams,  $sc
 });
 
 //Tool
-crudApp.controller("ToolController", function ($scope, $http){
+crudApp.controller("ToolController", function ($scope, $http) {
 
     //alle Features
-    $http.post('databaseFiles/getFeatureList.php')
+    $http.post('DatabaseFiles/getFeatureList.php')
         .then(function (info) {
-          $scope.featureList=info.data;
+            $scope.featureList = info.data;
         });
     //alle Sprachen
-    $http.post('databaseFiles/getLanguageList.php')
+    $http.post('DatabaseFiles/getLanguageList.php')
         .then(function (info) {
-          $scope.languageList=info.data;
+            $scope.languageList = info.data;
         });
 
     //alle Technologien ohne Sprachen
-    $http.post('databaseFiles/getTechwithoutLangList.php')
+    $http.post('DatabaseFiles/getTechwithoutLangList.php')
         .then(function (info) {
-            $scope.techsList=info.data;
+            $scope.techsList = info.data;
         });
 
     //Anfrage initalisieren
-    $scope.anfrage="";
-    $scope.kriterien=0;
+    $scope.anfrage = "";
+    $scope.kriterien = 0;
 
     //Ergebnis erst eziegen wenn Submit & vorher formular anzeigen
     $('#ergebnis').css('display', 'none');
@@ -390,29 +389,32 @@ crudApp.controller("ToolController", function ($scope, $http){
 
     //6. create resetForm() function. This will be called on Reset button click.
     $scope.resetForm = function () {//ToDo: Reset
-        };
+    };
     //Wenn Projektart Neu, alte Technologien nicht anzeigen
     $('input[name="projektart"]').change(function () {
         var name = $(this).val();
-        if(name==="new"){$('.abfrage_alt').css('display', 'none');}
-        else{$('.abfrage_alt').css('display', 'block');}
+        if (name === "new") {
+            $('.abfrage_alt').css('display', 'none');
+        }
+        else {
+            $('.abfrage_alt').css('display', 'block');
+        }
     });
 
     //Ergebnis anzeigen
     $scope.pressEmpf = function (myE) {
 
-        $scope.anfrage=myE;
+        $scope.anfrage = myE;
         //Get all Technologies
         $scope.ergebnis = [];
 
+
         getResult($scope.anfrage);
-        console.log($scope.ergebnis);
         //Formular nicht mehr anzeigen
         $('#empForm').css('display', 'none');
         //Ergebnis anzeigen
         $('#ergebnis').slideUp();
         $('#ergebnis').slideToggle();
-
 
 
         //Technologien nach Sprache durchsuchen
@@ -421,178 +423,342 @@ crudApp.controller("ToolController", function ($scope, $http){
         //empfehlungsreihenfolge naach übereinstimmung der Kirertien
         //Wenn keine übereinstimmung keine Anzeige der technologie
     }
-    function getResult(abfrage){
+    function getResult(abfrage) {
 
 
-        $scope.kriterien=$scope.kriterien+abfrage.language.length+abfrage.features.length;
-        //Todo: +abfrage.techs.length;
-
+        $scope.kriterien = 0;
         //Wenn Implementierung
-        if(abfrage.projektart=='new'){
-            var languages=makeStringName(abfrage.language);
-            var features=makeStringFeature(abfrage.features);
+        if (abfrage.projektart == 'new') {
+            $scope.kriterien = $scope.kriterien + abfrage.language.length + abfrage.features.length;
+            var languages = makeStringName(abfrage.language);
+            var features = makeStringFeature(abfrage.features);
+
             //Sprache
-            $http.post('databaseFiles/getLanguage.php', languages)
+            $http.get('DatabaseFiles/getLanguage.php', languages)
                 .then(function (info) {
+                    //Diese Technologie funktioniert
                     console.log(info);
                     getRating(info);
-                    console.log( $scope.ergebnis);
-
                 });
 
             //Features
-            $http.post('databaseFiles/getFeature.php', features)
+            $http.get('DatabaseFiles/getFeature.php', features)
                 .then(function (info) {
+                    //Oder du nutzt diese Technologien für die jeweiligen Features
+                    console.log(info);
                     getRating(info);
-                    console.log( $scope.ergebnis);
                 });
-            console.log("Ich versuchs");
         }
 
         //Wenn Austausch
         else {
+            //Prüfen ob mit den vorhandenen Technologien schon alle Features abgedeckt sind.
+
+            $scope.kriterien = $scope.kriterien + abfrage.language.length + abfrage.features.length
+                + abfrage.features_alt.length;
+
 
             //vorhandene Technologien besitzen alles was man braucht
             //welche sind die neuen Features
-
-            //prüfen wo sich Array unterscheidet
-            /*abfrage.features = ($.grep(abfrage.features, function(el) {
-                return $.inArray(el, abfrage.features_alt) === -1;
-            })).concat($.grep(abfrage.features_alt, function(el) {
-                return $.inArray(el, abfrage.features) === -1;
-            }));*/
-
             //prüfen ob verwendete Technologien Features hat
             //1. Fall Technologie hat die von zuhasue aus
-
             //alle neuen Features die in Technologie vorhanden sind
-            var technologien_alt=makeStringName(abfrage.techs);
-            var features=makeStringFeature(abfrage.features);
-            var zusammen="" +technologien_alt+";"+features;
-            $http.post('databaseFiles/getFeaturesOfTechs.php', zusammen)
-                .then(function (info) {
+            //alte sind ja irgednwie schon vorhanden
 
+            var technologien_alt = makeStringName(abfrage.techs);
+
+            var languages = makeStringName(abfrage.language);
+            var techLangs = "" + technologien_alt + ";" + languages;
+            $http.get('DatabaseFiles/getLanguageOfTechs.php', techLangs)
+                .then(function (info) {
+                    //Diese Technologie funktioniert
+                    getRating(info);
                 });
 
-            //2. Fall benötigt weitere Technologie dazu (siehe vorhandene Technologie kann ergänzt werden
+            var features = makeStringFeature(abfrage.features);
+            var features_alt = makeStringFeature(abfrage.features_alt);
+            var techFeat = "" + technologien_alt + ";" + features;
+            var neueFeatures = new Array();
+//TODO: POst get beim firefox
 
+            $http.post('DatabaseFiles/getFeaturesOfTechs.php', techFeat)
+                .then(function (info) {
+                    //alle vorhandenen Features in den benutzen Technologien
+                    $scope.vorhandeneFeatures = info.data;
+                    getRating(info);
 
-
-            //vorhandene Technologien können ergänzt werden
-
-            //vorhandene Technologien können ausgetauscht werden
-
-            //vorhandene Technologien müssen ausgetauscht werden
-
-        }
-
-
-
-    }
-    function getRating(info){
-        for(var i=0; i < info.data.length; i++){
-            var count=0;
-            for(var c in $scope.ergebnis){
-                count++;
-            }
-            //wenn schon tehcnologien vorhanden
-            if(count!=0){
-                //alle vorhanden technologien durchgehen
-                for(var sol in $scope.ergebnis){
-                    //wenn name gleich
-                    if($scope.ergebnis[sol].name==info.data[i].tech_name){
-                        var anzahl= $scope.ergebnis[sol].emp;
-                        anzahl++;
-                        $scope.ergebnis[sol].emp=anzahl;
-                        $scope.ergebnis[sol].dependsOn= "" + $scope.ergebnis[sol].dependsOn +", " +  info.data[i].dependsOnName;
+                    //alle Features die nicht vorhanden sind in der neuen Technologie
+                    neueFeatures = abfrage.features;
+                    for (var i = 0; i < abfrage.features.length; i++) {
+                        //welche Features sind noch übrig? Vergleich vorhandene mit features
+                        for (var j = 0; j < $scope.vorhandeneFeatures.length; j++) {
+                            if (abfrage.features[i].f_name == $scope.vorhandeneFeatures[j].dependsOnName) {
+                                console.log("gleich");
+                                neueFeatures.splice(i, 1);
+                            }
+                        }
                     }
-                    else{
-                        $scope.ergebnis.push(
-                            {
-                                name: info.data[i].tech_name,
-                                id: info.data[i].tech_id,
-                                emp:1,
-                                dependsOn: info.data[i].dependsOnName
+                    console.log(neueFeatures);
+                    if (neueFeatures == 0) {
+
+                        $scope.empfehlung="Alle benötigten Features sind in den genutzten Technologien vorhanden"
+                    }
+                    else {
+                        //Werden nicht abgedeckt also neue Featurs noch ungedeckt
+
+                        //vorhandene Technologien können ergänzt werden
+                        //2. Fall benötigt weitere Technologie dazu (siehe vorhandene Technologie kann ergänzt werden, durch einfache Abhängigkeiten
+                        //welche Features können mit den Abhängigkeiten der technologien hinzugefügt werden
+                        //neuFeatures, welche nicht in vorhandenen Technologien sind in ergänzenden Technologien suchen
+                        //zunächst suchen welche Technologien diese features haben
+
+                        //für Languages noch weitere holen
+                        $http.get('DatabaseFiles/getLanguage.php', languages)
+                            .then(function (info) {
+                                //Diese Technologie funktioniert
+                                console.log(info);
+                                getRating(info);
+                            });
+
+                        var newFeatures = makeStringFeature(neueFeatures);
+                        console.log(newFeatures)
+                        var techWithThisFeatures;
+                        var techWithThisFeaturesWithDependsOnUsedTech;
+
+                        $http.get('DatabaseFiles/getFeature.php', newFeatures)
+                            .then(function (info) {
+
+                                //Hinzufügen zum ergebnissen und prüfen ob Zusammenhang, dann in Kombination anzeigen
+                                getRating(info);
+                                //checkIfAllFeaturesIn();
+                                console.log($scope.ergebnis);
+                                 //ToDo:Wenn Kombination nicht in Datenbank, aber auch nicht in Kompatibel
+                                /*
+                                 techWithThisFeatures=info.data;
+                                 var techsWTF=makeStringName(techWithThisFeatures);
+                                 var forquery= ""+technologien_alt+";"+techsWTF;
+                                 $http.get('DatabaseFiles/checkIfCompatible.php',checkingValues)
+                                 .then(function (info) {
+                                 if (info.data.length > 0) {
+                                 //Nicht kompatible Technologien
+                                 //Nur die anzeigen die kompatibel sind
+                                 //Die anderen zu Schritt 4
+                                 }
+                                 else {
+                                 //alle kompatibel
+                                 //alle Anzeigen
+                                 }
+                                 });*/
                             });
                     }
+                });
+            //Fall 4,vorhandene Technologien können ausgetauscht werden
+            //Fall 5. vorhandene Technologien müssen ausgetauscht werden
+        }
+    }
+
+    //Für NeuImplementation
+    function getRating(info) {
+        var vorhanden = false;
+        for (var i = 0; i < info.data.length; i++) {
+            //console.log(i);
+            //wenn schon technologien vorhanden
+            //alle vorhanden technologien durchgehen
+            for (var sol in $scope.ergebnis) {
+                //wenn name gleich
+                if ($scope.ergebnis[sol].name == info.data[i].tech_name) {
+                    vorhanden = true;
+                    if (!$scope.ergebnis[sol].dependsOn.match(info.data[i].dependsOnName)) {
+                        var anzahl = $scope.ergebnis[sol].emp;
+                        anzahl++;
+                        $scope.ergebnis[sol].emp = anzahl;
+                        $scope.ergebnis[sol].dependsOn = "" + $scope.ergebnis[sol].dependsOn + ", " + info.data[i].dependsOnName;
+
+                    }
+
                 }
             }
-            //wenn noch keine vorhanden
-            else{
+            if (!vorhanden) {
+                //console.log("Name war noch nicht vorhanden, pushe");
+                //console.log(info.data[i].tech_name);
                 $scope.ergebnis.push(
                     {
                         name: info.data[i].tech_name,
                         id: info.data[i].tech_id,
-                        emp:1,
-                        dependsOn: info.data[i].dependsOnName
+                        emp: 1,
+                        dependsOn: info.data[i].dependsOnName,
+                        combinationWith: []
                     });
             }
+            vorhanden = false;
+        }
+
+        var technologien = "";
+        for (var i = 0; i < $scope.ergebnis.length; i++) {
+
+            for (var j = 0; j < $scope.ergebnis.length; j++) {
+                if (i != j) {
+
+                    technologien = "'" + $scope.ergebnis[i].name + "';'" + $scope.ergebnis[j].name + "'"
+                    getTechCombination(technologien);
+                }
+            }
         }
     }
-    function makeStringName(daten){
-        var newString="";
-        for(var a=0; a < daten.length; a++){
-            if(a==0){
-                newString=newString + "'" + daten[a].tech_name+"'";
-            }
-            else{
-                newString=newString + ",'" + daten[a].tech_name+"'";
-            }
-        }
-        return newString;
+
+    //Alle Kombinations möglichkeiten für gefundene Ergebnisse
+    function getTechCombination(daten) {
+        var combination;
+        $http.get('DatabaseFiles/checkIfDepends.php', daten)
+            .then(function (info) {
+                //Kombination vorhanden
+                if (info.data.length > 0) {
+                    combination = info.data;
+                    daten = daten.replace(/'/g, "");
+                    daten = daten.split(";");
+                    for (var com in combination) {
+                        for (var sol in $scope.ergebnis) {
+                            //wenn name gleich
+                            var featureCount=false;
+                            if ($scope.ergebnis[sol].name == daten[0]) {
+                                var dependsOnFeature;
+                                for (var ab in $scope.ergebnis) {
+                                    if ($scope.ergebnis[ab].name == daten[1]) {
+                                        dependsOnFeature = $scope.ergebnis[ab].dependsOn;
+                                        featureCount=false;
+                                    }
+                                }
+                                if ($scope.ergebnis[sol].combinationWith.length > 0) {
+
+                                    for (var fea in $scope.ergebnis[sol].combinationWith) {
+                                        //console.log($scope.ergebnis[sol].combinationWith[fea].feature);
+                                        //console.log(dependsOnFeature);
+
+                                        if ($scope.ergebnis[sol].combinationWith[fea].feature != dependsOnFeature) {
+
+                                            if(!featureCount){
+                                                var anzahl = $scope.ergebnis[sol].emp;
+                                                anzahl++;
+                                                $scope.ergebnis[sol].emp = anzahl;
+                                            }
+                                            featureCount=true;
+                                        }
+                                    }
+                                }
+                                else {
+                                    var anzahl = $scope.ergebnis[sol].emp;
+                                    anzahl++;
+                                    $scope.ergebnis[sol].emp = anzahl;
+                                }
+
+                                $scope.ergebnis[sol].combinationWith.push({
+                                    tech: combination[com].dependsOnTechnologie,
+                                    feature: dependsOnFeature
+                                });
+
+
+                            }
+                            if ($scope.ergebnis[sol].name == daten[1]) {
+                                $scope.ergebnis.splice(sol, 1);
+                            }
+                        }
+                    }
+                }
+            });
     }
-    function makeStringFeature(daten){
-        var newString="";
-        for(var a=0; a < daten.length; a++){
-            if(a==0){
-                newString=newString + "'" + daten[a].f_name+"'";
+
+    function checkIfAllFeaturesIn() {
+        var vorhanden = false;
+        for (var sol in $scope.ergebnis) {
+            for (var techs in $scope.anfrage.techs) {
+                if ($scope.anfrage.techs[techs].tech_name == $scope.ergebnis[sol].name) {
+                    $scope.ergebnis[sol].old="true";
+                    vorhanden = true;
+                }
             }
-            else{
-                newString=newString + ",'" + daten[a].f_name+"'";
+            if (!vorhanden) {
+                //Todo: Sollen Technologien für Features nicht angezeiogt werden oder doch?
+                console.log("Not useful");
+                console.log("kill" + $scope.ergebnis[sol].name);
+                //$scope.ergebnis.splice(sol, 1);
+            }
+            vorhanden = false;
+        }
+    }
+
+
+    //Aus Array String mit Technologien
+    function makeStringName(daten) {
+        var newString = "";
+        for (var a = 0; a < daten.length; a++) {
+            if (a == 0) {
+                newString = newString + "'" + daten[a].tech_name + "'";
+            }
+            else {
+                newString = newString + ",'" + daten[a].tech_name + "'";
             }
         }
         return newString;
     }
 
-    $scope.stars  = function stars(name,emp){
-        console.log("stars");
-        //console.log(name);
-            var prozent=0;
-            prozent=emp/$scope.kriterien;
-        var stars = prozent*5;
-        $('.'+name).rating('rate',stars);
- /*       prozent=prozent*100;
-            console.log(prozent);
-            console.log(name);
-            $('#'+name).width(prozent+'%');*/
+    //Aus Array String mit Features
+    function makeStringFeature(daten) {
+        var newString = "";
+        for (var a = 0; a < daten.length; a++) {
+            if (a == 0) {
+                newString = newString + "'" + daten[a].f_name + "'";
+            }
+            else {
+                newString = newString + ",'" + daten[a].f_name + "'";
+            }
+        }
+        return newString;
+    }
+
+    //Rating
+    $scope.stars = function stars(name, emp) {
+        var prozent = 0;
+        prozent = emp / $scope.kriterien;
+        var stars = prozent * 5;
+        $('.' + name).rating('rate', stars);
+        /*       prozent=prozent*100;
+         console.log(prozent);
+         console.log(name);
+         $('#'+name).width(prozent+'%');*/
 
     };
     //ToDo: Daraus Service machen
-    $scope.defineImage  = function defineImage(name, id){
+    //Bild laden
+    $scope.defineImage = function defineImage(name, id) {
         var img = new Image();
-        var newstr=""+name;
-        newstr= newstr.replace(" ","");
-        var url="images/"+newstr+".png";
-        console.log(url);
-
-        img.onerror = img.onabort = function() {
-            $('#img_'+id).attr('src', "images/undefined.gif");
-            $('#img_'+id).css('display', 'none');
+        var newstr = "" + name;
+        newstr = newstr.replace(" ", "");
+        var url = "images/" + newstr + ".png";
+        img.onerror = img.onabort = function () {
+            $('#img_' + id).attr('src', "images/undefined.gif");
+            $('#img_' + id).css('display', 'none');
         };
-        img.onload = function() {
-            $('#img_'+id).attr('src', url);
-            $('#img_'+id).attr('alt', 'logo '+newstr);
+        img.onload = function () {
+            $('#img_' + id).attr('src', url);
+            $('#img_' + id).attr('alt', 'logo ' + newstr);
         };
         img.src = url;
     }
 
+    //ToDo:Rating Sortierung
+    //Filtering für Ergebnisse
     $scope.propertyName = 'rating';
     $scope.reverse = true;
-
-
-    $scope.sortBy = function(propertyName) {
+    $scope.sortBy = function (propertyName) {
         $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
         $scope.propertyName = propertyName;
     };
-
 });
+
+
+//prüfen wo sich Array unterscheidet
+/*abfrage.features = ($.grep(abfrage.features, function(el) {
+ return $.inArray(el, abfrage.features_alt) === -1;
+ })).concat($.grep(abfrage.features_alt, function(el) {
+ return $.inArray(el, abfrage.features) === -1;
+ }));*/

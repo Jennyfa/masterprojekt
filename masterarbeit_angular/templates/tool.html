@@ -3,7 +3,7 @@
     <h3 class="text-center">Entscheidungsunterstützung</h3>
     <!--ToDO: besseres multiselect-->
     <!--ToDO: Hilfetexte-->
-    <!--ToDO: In Ergebnis Asuwahl anzeigen, als Badges mit x? -->
+    <!--ToDO: Rechts anzeigen was ausgewählt -->
     <!--ToDO: 'Keine Angabe' abfangen -->
     <div class="form-group">
 
@@ -78,7 +78,13 @@
 
 <div id="ergebnis" hidden>
     <h3 class="text-center">Empfehlung</h3>
-    <!--<span>{{solution}}</span></td>-->
+    <b>Ihre Kriterien:</b>
+
+    <span ng-repeat="kriterium in empInfo.language" class="label label-default">{{kriterium.tech_name}}</span>
+    <span ng-repeat="kriterium in empInfo.features" class="label label-default">{{kriterium.f_name}}</span>
+    <span ng-repeat="kriterium in vorhandeneFeatures" class="label label-default">{{kriterium.f_name}}</span>
+    <span ng-repeat="kriterium in empInfo.techs" class="label label-default">{{kriterium.tech_name}}</span>
+    <span ng-repeat="kriterium in empInfo.features_alt" class="label label-default">{{kriterium.f_name}}</span>
     <div class="row">
 
 
@@ -91,7 +97,6 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-
             <!-- Table to show employee detalis -->
             <div class="table-responsive">
                 <!--<table class="table table-hover" ng-show="search_query">-->
@@ -115,16 +120,21 @@
 
                     <tr ng-repeat="detail in ergebnis| filter:search_query | orderBy:propertyName:reverse">
                         <td>
-                            {{stars(detail.name,detail.emp)}} <input type="hidden" class="{{detail.name}}" data-readonly/>
+                            {{stars(detail.name,detail.emp)}} <input type="hidden" class="hoehe {{detail.name}}" data-readonly/>
                          <!-- <div class="star-ratings-sprite">{{stars(detail.name,detail.emp)}}<span id="{{detail.name}}" class="star-ratings-sprite-rating"></span></div>-->
-                            <span>{{detail.emp}} von {{kriterien}}</span>
+                            <br/><span>{{detail.emp}} von {{kriterien}}</span>
+
                         </td>
                         <td>
                             {{defineImage(detail.name, detail.id)}}
-                            <img class="img_small" id="img_{{detail.id}}"> <span>{{detail.name}}</span>
+                            <img class="img_small" id="img_{{detail.id}}"> <span class="hoehe">{{detail.name}}</span>
+                            <br/><br/><span ng-if="(detail.combinationWith.length>0)"><u>In Kombination mit:</u></span><br/>
+                            <span ng-repeat="combi in detail.combinationWith">{{combi.tech}}<br/></span>
                         </td>
                         <td>
-                            <span>{{detail.dependsOn}}</span>
+                            <span class="hoehe" >{{detail.dependsOn}}</span>
+                            <br/><br/><span ng-if="(detail.combinationWith.length>0)"></span><br/>
+                            <span ng-repeat="combif in detail.combinationWith">{{combif.feature}}<br/></span>
                         </td>
                         <td>
                             <!-- <a ng-href="#/techdetails/{{detail.tech_id}}">SAPUI5</a>-->
@@ -136,6 +146,8 @@
                     </tr>
 
                 </table>
+
+               <span class="center"><b>{{empfehlung}}</b></span>
             </div>
         </div>
     </div>
