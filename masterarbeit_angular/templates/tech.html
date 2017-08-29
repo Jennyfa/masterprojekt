@@ -1,4 +1,4 @@
-<div class="container wrapper " ng-controller="DbController">
+<div class="container wrapper">
 
     <div class="row">
         <div class="col-lg-12">
@@ -22,20 +22,36 @@
             <!-- Table to show employee detalis -->
             <div class="table-responsive">
                 <!--<table class="table table-hover" ng-show="search_query">-->
+
                 <table class="table table-hover">
                     <tr>
 
-                        <th>Technologie</th>
-                        <th>Details</th>
+                        <th>
+                            <a ng-click="sortType = 'tech_name'; sortReverse = !sortReverse">
+                                Technologie
+                                <span ng-show="sortType == 'tech_name' && !sortReverse" class="fa fa-caret-down"></span>
+                                <span ng-show="sortType == 'tech_name' && sortReverse" class="fa fa-caret-up"></span>
+                            </a>
+                        </th>
+                        <th> <a ng-click="sortType = 'tech_cat'; sortReverse = !sortReverse">
+                            Kategorie
+                            <span ng-show="sortType == 'tech_cat' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortType == 'tech_cat' && sortReverse" class="fa fa-caret-up"></span>
+                        </a>
+                        </th>
+                        <th>Details ansehen
+                        </th>
 
                     </tr>
 
-                    <tr ng-repeat="detail in all.data | filter:search_query">
+                    <tr ng-repeat="detail in all.data | orderBy:sortType:sortReverse | filter:search_query ">
                         <td>{{defineImage(detail.tech_name, detail.tech_id)}}
                             <img class="img_small" id="img_{{detail.tech_id}}"><span>
-                            {{detail.tech_name}}</span></td>
-                        <!--ToDO: Tag für Category  miteinbauen-->
-                        <td>
+                            {{detail.tech_name}}</span>
+                          </td>
+
+                        <td> {{detail.tech_cat}}
+                        </td><td>
                             <!-- <a ng-href="#/techdetails/{{detail.tech_id}}">SAPUI5</a>-->
 
                             <button class="btn" go-click="/techdetails/{{detail.tech_id}}/{{detail.tech_name}}" title="Edit"

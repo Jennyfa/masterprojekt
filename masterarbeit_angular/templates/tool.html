@@ -54,11 +54,10 @@
             <select id="feat_alt" class="form-control" ng-model="empInfo.features_alt"  multiple ng-multiple="true" ng-options="feature.f_name for feature in featureList" >
             </select>
         </div>
-
     </div>
 
 
-    <div class="form-group abfrage_alt">
+   <!-- <div class="form-group abfrage_alt">
         <label for="datenbank" class="col-sm-3 control-label">Welche Datenbank wird genutzt:</label>
         <div class="col-sm-3">
             <select id="datenbank" class="form-control" ng-model="empInfo.datenbank"  multiple ng-multiple="true">
@@ -68,7 +67,7 @@
             </select>
         </div>
     </div>
-
+-->
 
     <!--Contraints: Java muss größer sein als VErsion 7.4... , Qualitätsattribute, derzeit eingesetzte Technologien -->
     <input type="submit" value="Empfehlung erhalten" class="btn btn-primary col-sm-offset-3"  ng-click="pressEmpf(empInfo)"/>
@@ -102,23 +101,26 @@
                 <!--<table class="table table-hover" ng-show="search_query">-->
                 <table class="table table-hover">
                     <tr>
-                        <th>Rating <span
-                                class="glyphicon glyphicon-sort" ng-click="sortBy('rating')"></span>
-                            <span class="sortorder" ng-show="propertyName === 'rating'" ng-class="{reverse: reverse}"></span></th>
-                        <th>Technologie <span
-                                class="glyphicon glyphicon-sort" ng-click="sortBy('name')"></span>
-                            <span class="sortorder" ng-show="propertyName === 'name'" ng-class="{reverse: reverse}"></span>
-                            </th>
-                        <th>Übereinstimmung <span
-                            class="glyphicon glyphicon-sort" ng-click="sortBy('ueber')"></span>
-                            <span class="sortorder" ng-show="propertyName === 'ueber'" ng-class="{reverse: reverse}"></span></th>
+                        <th> <a ng-click="sortType = 'emp'; sortReverse = !sortReverse">
+                            Rating
+                            <span ng-show="sortType == 'emp' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortType == 'emp' && sortReverse" class="fa fa-caret-up"></span>
+                            </a></th>
+                        <th><a ng-click="sortType = 'name'; sortReverse = !sortReverse">
+                            Technolgie
+                            <span ng-show="sortType == 'name' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortType == 'name' && sortReverse" class="fa fa-caret-up"></span></a></th>
+                        <th><a ng-click="sortType = 'dependsOn'; sortReverse = !sortReverse">
+                        Übereinstimmung
+                        <span ng-show="sortType == 'dependsOn' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="sortType == 'dependsOn' && sortReverse" class="fa fa-caret-up"></span></a></th>
                         <th>Details</th>
 
                     </tr>
 
 
 
-                    <tr ng-repeat="detail in ergebnis| filter:search_query | orderBy:propertyName:reverse">
+                    <tr ng-repeat="detail in ergebnis | orderBy:sortType:sortReverse |  filter:search_query ">
                         <td>
                             {{stars(detail.name,detail.emp)}} <input type="hidden" class="hoehe {{detail.name}}" data-readonly/>
                          <!-- <div class="star-ratings-sprite">{{stars(detail.name,detail.emp)}}<span id="{{detail.name}}" class="star-ratings-sprite-rating"></span></div>-->

@@ -4,7 +4,8 @@ header("content-type: text/html; charset=UTF-8");
 require_once 'database_connections.php';
 // mysqli query to fetch all data from database
 //$query = "SELECT * from emp_details ORDER BY emp_id ASC";
-$data = file_get_contents("php://input");
+//$data = file_get_contents("php://input");
+$data =$_GET['data'];
 $teile = explode(";", $data); //1. Teil verwendetet Technologien 2. Mögliche Ergänzungen
 
 //selektiere alle Technologien, die die Ergänzungen bieten aber von denen die verwendeten Technologien abhängig sind

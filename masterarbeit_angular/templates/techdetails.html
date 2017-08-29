@@ -29,7 +29,7 @@
 
         </div>
 
-        <!--ToDO:  X in Linie für micht kompatibel-->
+        <!--ToDO:  X in Linie für nicht kompatibel-->
             <div class="row">
             <div class="col-lg-8">
                 <p>{{details.data.tech_desc}}</p><br/>
@@ -61,8 +61,10 @@
                 <h4>Häufige Kombinationen</h4>
                 <div class="row" ng-repeat="kombi in beziehung.data | filter : {b_type: 'Kombination'}">
                     <div class="col-md-2">
+                        <a class="btn" go-click="/techdetails/{{kombi.tech_id}}/{{kombi.tech_name}}" title="Edit"
+                           data-target="#techdetails">
                         {{defineImage(kombi.tech_name, kombi.tech_id)}}
-                        <img class="img_kasten" id="img_{{kombi.tech_id}}">
+                        <img class="img_kasten" id="img_{{kombi.tech_id}}"></a>
                     </div>
                 </div>
                 <div ng-if="(beziehung.data | filter : {b_type: 'Kombination'})== null || (beziehung.data | filter : {b_type: 'Kombination'}).length === 0">
@@ -78,8 +80,10 @@
                 <h4>Empfehlung durch Entwickler</h4>
                 <div class="row" ng-repeat="empfehl in beziehung.data | filter : {b_type: 'Empfehlung'}">
                     <div class="col-md-2">
+                        <a class="btn" go-click="/techdetails/{{empfehl.tech_id}}/{{empfehl.tech_name}}" title="Edit"
+                           data-target="#techdetails">
                         {{defineImage(empfehl.tech_name, empfehl.tech_id)}}
-                        <img class="img_kasten" id="img_{{empfehl.tech_id}}"><b ng-if="!empfehl.tech_name">NONE</b>
+                        <img class="img_kasten" id="img_{{empfehl.tech_id}}"><b ng-if="!empfehl.tech_name">NONE</b></a>
                     </div>
 
                 </div>
@@ -94,8 +98,10 @@
                 <h4>Ermöglicht diese Technologien</h4>
                 <div class="row" ng-repeat="erm in beziehung.data | filter : {b_type: 'Ermöglichung'}">
                     <div class="col-md-2">
+                        <a class="btn" go-click="/techdetails/{{erm.tech_id}}/{{erm.tech_name}}" title="Edit"
+                           data-target="#techdetails">
                         {{defineImage(erm.tech_name, erm.tech_id)}}
-                        <img class="img_kasten" id="img_{{erm.tech_id}}">
+                        <img class="img_kasten" id="img_{{erm.tech_id}}"></a>
                     </div>
                 </div>
                 <div ng-if="(beziehung.data | filter : {b_type: 'Ermöglichung'})== null || (beziehung.data | filter : {b_type: 'Ermöglichung'}).length === 0">
@@ -111,9 +117,10 @@
                 <h4>Alternativen</h4>
                 <div class="row" ng-repeat="alt in beziehung.data | filter : {b_type: 'Alternative'}">
                     <div class="col-md-2">
-
+                        <a class="btn" go-click="/techdetails/{{alt.tech_id}}/{{alt.tech_name}}" title="Edit"
+                                data-target="#techdetails">
                         {{defineImage(alt.tech_name, alt.tech_id)}}
-                        <img class="img_kasten" id="img_{{alt.tech_id}}">
+                        <img class="img_kasten" id="img_{{alt.tech_id}}"></a>
                         </div>
                 </div>
                 <div ng-if="(beziehung.data | filter : {b_type: 'Alternative'})== null || (beziehung.data | filter : {b_type: 'Alternative'}).length === 0">

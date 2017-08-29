@@ -4,7 +4,7 @@ header("content-type: text/html; charset=UTF-8");
 // Including database connections
 require_once 'database_connections.php';
 // mysqli query to fetch all data from database
-$query = "SELECT tech_name, tech_id from technologien ORDER BY tech_name ASC";
+$query = "SELECT tech_name, tech_id, tech_cat from technologien ORDER BY tech_name ASC";
 $result = mysqli_query($con, $query);
 $arr = array();
 $count=0;

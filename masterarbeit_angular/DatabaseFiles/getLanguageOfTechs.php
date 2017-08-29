@@ -4,9 +4,10 @@ header("content-type: text/html; charset=UTF-8");
 require_once 'database_connections.php';
 // mysqli query to fetch all data from database
 //$query = "SELECT * from emp_details ORDER BY emp_id ASC";
-$data = file_get_contents("php://input");
-$teile = explode(";", $data);
+//$data = file_get_contents("php://input");
 
+$data =$_GET['lang'];
+$teile = explode(";", $data);
 
 $query = "SELECT t.tech_name AS 'tech_name', t.tech_id AS 'tech_id', b.dependsOn AS 'dependsOn', t3.tech_name AS 'dependsOnName' FROM technologien t 
  LEFT JOIN beziehungen b ON b.t_id=t.tech_id 

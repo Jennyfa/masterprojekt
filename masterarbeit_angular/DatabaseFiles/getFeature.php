@@ -4,8 +4,8 @@ header("content-type: text/html; charset=UTF-8");
 require_once 'database_connections.php';
 // mysqli query to fetch all data from database
 //$query = "SELECT * from emp_details ORDER BY emp_id ASC";
-$data = file_get_contents("php://input");
-
+//$data = file_get_contents("php://input");
+$data =$_GET['feature'];
 $str= str_replace("[\"", "", $data);
 $str= str_replace("\"]", "", $str);
 $str= str_replace("\"", "'", $str);;

@@ -4,7 +4,7 @@
 $(document).on('click', function (event) {
     var target = $(event.target);
 
-    if (target.attr('id') !== 'feedback' && target.attr('id') !== "circle" && target.attr('id') !== "detail_link") {
+    if (target.attr('id') !== 'feedback' && target.attr('id') !== "circle" && target.attr('id') !== "detail_link" && target.attr('class') !='btn') {
         $('#feedback').remove();
     }
 });
@@ -66,29 +66,35 @@ crudApp.controller("DbController", function ($scope, $http) {
             $scope.all = info;
         });
 
+    $scope.sortType     = 'name'; // set the default sort type
+    $scope.sortReverse  = false;  // set the default sort order
+
     $scope.defineImage = function defineImage(name, id) {
         var img = new Image();
         var newstr = "" + name;
         newstr = newstr.replace(" ", "");
         var url = "images/" + newstr + ".png";
-
-        img.onabort = function () {
-
-            $('#img_' + id).attr('src', "images/undefined.gif");
-            $('#img_' + id).css('display', 'none');
-        };
-        img.onload = function () {
-            $('#img_' + id).attr('src', url);
-            $('#img_' + id).attr('alt', 'logo ' + newstr);
-        };
-        img.src = url;
+        $.get(url)
+            .done(function() {
+                $('#img_' + id).attr('src', url);
+                $('#img_' + id).attr('alt', 'logo ' + newstr);
+            }).fail(function() {
+                $('#img_' + id).attr('src', "images/undefined.gif");
+                $('#img_' + id).css('display', 'none');
+        })
     }
 
 });
 //TechnologieDetails
 crudApp.controller("DetailController", function ($scope, $http, $routeParams) {
     console.log($routeParams.param)
-    $http.get('DatabaseFiles/getTech.php', $routeParams.param)
+
+    var config = {
+        params: {tech: $routeParams.param},
+        headers : {'Accept' : 'application/json'}
+    };
+
+    $http.get('DatabaseFiles/getTech.php', config)
         .then(function (info) {
             $scope.details = info;
             console.log(info);
@@ -100,10 +106,14 @@ crudApp.controller("DetailController", function ($scope, $http, $routeParams) {
             $scope.details.data.cons = $scope.details.data.tech_con.split("|");
         });
 
-    $http.get('DatabaseFiles/getBeziehung.php', $routeParams.techid)
+    config = {
+        params: {tech: $routeParams.techid},
+        headers : {'Accept' : 'application/json'}
+    };
+
+    $http.get('DatabaseFiles/getBeziehung.php', config)
         .then(function (info) {
             $scope.beziehung = info;
-
         });
 
     //ToDo: Daraus Service machen
@@ -224,11 +234,13 @@ crudApp.controller('MainController', function ($scope, $http, $routeParams, $sce
             .on("click", function (d) {
                 $('#feedback').remove();
                 console.log(d);
+                var adress=window.location.pathname+window.location.search+"#/techdetails/"+d.id +"/"+d.name;
                 $("#pop").css('display', 'block');
                 $("#pop").append('<div id="feedback">' + d.name + '</br>' +
-                    '<button id="detail_link"  data-target="#techdetails" href="/techdetails/' + d.id + '/' + d.name + '">Details</button></div>');
-                $('#detail_link').click(function () {
-                    //todo:link
+                '<a class="btn" id="test" href="'+adress+'" go-click="/techdetails/'+d.id +'/'+d.name+'" title="Edit" data-target="#techdetails">test</a>');
+                  $('#test').click(function () {
+
+                    window.location.href(adress);
                 })
             });
 
@@ -275,8 +287,12 @@ crudApp.controller('MainController', function ($scope, $http, $routeParams, $sce
     var links = [];
     //Die ausgesucht Technologie
 
+    var config = {
+        params: {tech: $routeParams.param},
+        headers : {'Accept' : 'application/json'}
+    };
 
-    $http.get('DatabaseFiles/getTech.php', $routeParams.param)
+    $http.get('DatabaseFiles/getTech.php', config)
         .then(function (info) {
             $scope.base = info;
             nodes[$routeParams.param].cat = info.data.tech_cat;
@@ -302,19 +318,34 @@ crudApp.controller('MainController', function ($scope, $http, $routeParams, $sce
     function getData(id) {
         //Abhängigkeiten holen
         return new Promise(function (resolve, reject) {
-            $http.post('DatabaseFiles/getRelation.php', id)
+
+            console.log(id);
+            var config = {
+                params: {techIds: id},
+                headers : {'Accept' : 'application/json'}
+            };
+
+
+            $http.get('DatabaseFiles/getRelation.php', config)
                 .then(function (info) {
                     var relationen = info;
                     console.log(info);
 
                     //Array für die IDs
-                    var arrayIDs = new Array;
+                    var arrayIDs="";
                     if (relationen.data.length != 0) {
                         //Für Anzahl der Abhängigkeiten durchlaufen
                         for (var i = 0; i < relationen.data.length; i++) {
                             //Id in Array speichern
                             console.log(relationen.data[i]);
-                            arrayIDs[i] = relationen.data[i].tech_id;
+                            if(i==0){
+                                arrayIDs = arrayIDs + relationen.data[i].tech_id +" ";
+                            }
+                            else{
+                                arrayIDs = arrayIDs + ", " + relationen.data[i].tech_id +" ";
+                            }
+
+
                             nodes[relationen.data[i].tech_name] = (
                             {
                                 name: relationen.data[i].tech_name,
@@ -362,19 +393,21 @@ crudApp.controller('MainController', function ($scope, $http, $routeParams, $sce
 //Tool
 crudApp.controller("ToolController", function ($scope, $http) {
 
+
+
     //alle Features
-    $http.post('DatabaseFiles/getFeatureList.php')
+    $http.get('DatabaseFiles/getFeatureList.php')
         .then(function (info) {
             $scope.featureList = info.data;
         });
     //alle Sprachen
-    $http.post('DatabaseFiles/getLanguageList.php')
+    $http.get('DatabaseFiles/getLanguageList.php')
         .then(function (info) {
             $scope.languageList = info.data;
         });
 
     //alle Technologien ohne Sprachen
-    $http.post('DatabaseFiles/getTechwithoutLangList.php')
+    $http.get('DatabaseFiles/getTechwithoutLangList.php')
         .then(function (info) {
             $scope.techsList = info.data;
         });
@@ -433,16 +466,26 @@ crudApp.controller("ToolController", function ($scope, $http) {
             var languages = makeStringName(abfrage.language);
             var features = makeStringFeature(abfrage.features);
 
+            var config = {
+                params: {lang: languages},
+                headers : {'Accept' : 'application/json'}
+            };
+
             //Sprache
-            $http.get('DatabaseFiles/getLanguage.php', languages)
+            $http.get('DatabaseFiles/getLanguage.php', config)
                 .then(function (info) {
                     //Diese Technologie funktioniert
                     console.log(info);
                     getRating(info);
                 });
 
+            config = {
+                params: {feature: features},
+                headers : {'Accept' : 'application/json'}
+            };
+
             //Features
-            $http.get('DatabaseFiles/getFeature.php', features)
+            $http.get('DatabaseFiles/getFeature.php', config)
                 .then(function (info) {
                     //Oder du nutzt diese Technologien für die jeweiligen Features
                     console.log(info);
@@ -469,7 +512,13 @@ crudApp.controller("ToolController", function ($scope, $http) {
 
             var languages = makeStringName(abfrage.language);
             var techLangs = "" + technologien_alt + ";" + languages;
-            $http.get('DatabaseFiles/getLanguageOfTechs.php', techLangs)
+
+            var config = {
+                params: {lang: techLangs},
+                headers : {'Accept' : 'application/json'}
+            };
+
+            $http.get('DatabaseFiles/getLanguageOfTechs.php',config)
                 .then(function (info) {
                     //Diese Technologie funktioniert
                     getRating(info);
@@ -479,9 +528,14 @@ crudApp.controller("ToolController", function ($scope, $http) {
             var features_alt = makeStringFeature(abfrage.features_alt);
             var techFeat = "" + technologien_alt + ";" + features;
             var neueFeatures = new Array();
-//TODO: POst get beim firefox
 
-            $http.post('DatabaseFiles/getFeaturesOfTechs.php', techFeat)
+
+            config = {
+                params: {feature: techFeat},
+                headers : {'Accept' : 'application/json'}
+            };
+
+            $http.get('DatabaseFiles/getFeaturesOfTechs.php',config)
                 .then(function (info) {
                     //alle vorhandenen Features in den benutzen Technologien
                     $scope.vorhandeneFeatures = info.data;
@@ -512,8 +566,14 @@ crudApp.controller("ToolController", function ($scope, $http) {
                         //neuFeatures, welche nicht in vorhandenen Technologien sind in ergänzenden Technologien suchen
                         //zunächst suchen welche Technologien diese features haben
 
+                        config = {
+                            params: {lang: languages},
+                            headers : {'Accept' : 'application/json'}
+                        };
+
+
                         //für Languages noch weitere holen
-                        $http.get('DatabaseFiles/getLanguage.php', languages)
+                        $http.get('DatabaseFiles/getLanguage.php', config)
                             .then(function (info) {
                                 //Diese Technologie funktioniert
                                 console.log(info);
@@ -525,7 +585,13 @@ crudApp.controller("ToolController", function ($scope, $http) {
                         var techWithThisFeatures;
                         var techWithThisFeaturesWithDependsOnUsedTech;
 
-                        $http.get('DatabaseFiles/getFeature.php', newFeatures)
+                        config = {
+                            params: {feature: newFeatures},
+                            headers : {'Accept' : 'application/json'}
+                        };
+
+
+                        $http.get('DatabaseFiles/getFeature.php', config)
                             .then(function (info) {
 
                                 //Hinzufügen zum ergebnissen und prüfen ob Zusammenhang, dann in Kombination anzeigen
@@ -609,7 +675,12 @@ crudApp.controller("ToolController", function ($scope, $http) {
     //Alle Kombinations möglichkeiten für gefundene Ergebnisse
     function getTechCombination(daten) {
         var combination;
-        $http.get('DatabaseFiles/checkIfDepends.php', daten)
+        var config = {
+            params: {data: daten},
+            headers : {'Accept' : 'application/json'}
+        };
+
+        $http.get('DatabaseFiles/checkIfDepends.php', config)
             .then(function (info) {
                 //Kombination vorhanden
                 if (info.data.length > 0) {
@@ -745,14 +816,9 @@ crudApp.controller("ToolController", function ($scope, $http) {
         img.src = url;
     }
 
-    //ToDo:Rating Sortierung
-    //Filtering für Ergebnisse
-    $scope.propertyName = 'rating';
-    $scope.reverse = true;
-    $scope.sortBy = function (propertyName) {
-        $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
-        $scope.propertyName = propertyName;
-    };
+
+    $scope.sortType     = 'name'; // set the default sort type
+    $scope.sortReverse  = false;  // set the default sort order
 });
 
 
