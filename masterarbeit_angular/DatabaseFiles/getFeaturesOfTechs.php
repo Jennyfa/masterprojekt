@@ -9,7 +9,6 @@ $data =$_GET['feature'];
 $teile = explode(";", $data);
 
 
-// Escaping special characters from updated data
 //Selektiere alle tech_features, die zu features gehören und der ausgewählten Technologie angehören
 $query = "SELECT f2.f_name AS 'dependsOnName', t.tech_name  FROM technologien t 
 LEFT JOIN tech_features tf  ON t.tech_id=tf.belongsTo 

@@ -13,7 +13,10 @@ $data =$_GET['tech'];
 //$query = "SELECT  tech_name, tech_id, a.ab_type,  r.r_ab_id, r.r_tech_id FROM (technologien t LEFT JOIN
 //relationen r  ON t.tech_id = r.von_tech_id) INNER JOIN abhaengigkeiten a ON r.r_ab_id=a.ab_id  WHERE r.r_tech_id IN (".$str.")";
 $query = "SELECT  tech_name, tech_id, b.b_type FROM technologien t LEFT JOIN
-beziehungen b ON t.tech_id = b.dependsOn  WHERE b.t_id ='$data' AND b.b_type IN ('Alternative', 'Kombination', 'Ermöglichung', 'Empfehlung')";
+beziehungen b ON t.tech_id = b.dependsOn  WHERE b.t_id ='$data' AND b.b_type IN ('Alternative', 'Kombination', 'Ermöglichung', 'Empfehlung')UNION
+SELECT  tech_name, tech_id, b.b_type FROM technologien t LEFT JOIN
+beziehungen b ON t.tech_id = b.t_id  WHERE b.dependsOn ='$data' AND b.b_type IN ('Alternative', 'Kombination')
+";
 
 //$query = "SELECT  t.tech_name, t.tech_id  a.ab_type,  r.r_ab_id FROM (technologien t LEFT JOIN relationen r  ON t.tech_id = r.von_tech_id) INNER JOIN abhaengigkeiten a ON r.r_ab_id=a.ab_id WHERE r.r_tech_id IN (".$str.")";
 

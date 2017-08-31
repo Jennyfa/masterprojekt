@@ -248,6 +248,10 @@ svg text{
 
 }
 
+.node{
+    color: lightcyan;
+}
+
 hr.link {
     margin: 0px;
     width:40px
@@ -261,6 +265,7 @@ line.nv-force-link{
      fill: none;
      stroke: #666;
      stroke-width: 1.5px;
+    opacity: 0.8;
  }
 
 
@@ -271,11 +276,13 @@ line.nv-force-link{
     border:solid red 0px;
     background-color:red;
     height:2px;
+    opacity: 0.9;
 }
 .link.Feature-Direktionale {
     stroke-dasharray: 0,2 1;
     stroke: purple;
     border:dashed purple 1px;
+    opacity: 0.8;
 
 }
 
@@ -283,11 +290,13 @@ line.nv-force-link{
     stroke-dasharray: 0,2 1;
     stroke: red;
     border:dashed red 1px;
+    opacity: 0.8;
 }
-.link.Optionale {
+.link.Erweiterung {
     stroke-dasharray: 0,2 1;
     stroke: black;
     border:dashed black 1px;
+    opacity: 0.8;
 }
 
 
@@ -298,6 +307,7 @@ line.nv-force-link{
     border:solid yellow 0px;
     background-color:yellow;
     height:2px;
+    opacity: 0.8;
 }
 
 
@@ -307,6 +317,7 @@ line.nv-force-link{
     background:darkred;
     border:solid darkred 0px;
     background-color:darkred;
+    opacity: 0.8;
     height:2px;
 }
 
@@ -322,6 +333,7 @@ line.nv-force-link{
 
 
 
+
 .node.g1 {
     r:30;
 }
@@ -330,6 +342,11 @@ line.nv-force-link{
 }
 .node.g3 {
     r:10;
+}
+
+.node, .other {
+    fill:rgb(236, 241, 241);
+    background-color: rgb(236, 241, 241);
 }
 
 
@@ -352,6 +369,10 @@ line.nv-force-link{
     background-color:rgb(240, 45, 228);
 }
 
+.tool {
+    fill: rgb(194, 238, 238);
+    background-color:rgb(194, 238, 238);
+}
 
 
 text {
@@ -385,10 +406,18 @@ text {
     max-height: 35px;
 }
 
-#feedback{
-    background-color:rgb(0,176,240);
+#feedback {
+    background-color: rgb(0,176,240);
     width: 150px;
     border-radius: 5px;
+    color: white;
+    height: 130px;
+    position: absolute;
+    padding: 10px;
+    margin-top: 30px;
+}
+
+#feedback a{
     color:white;
 }
 

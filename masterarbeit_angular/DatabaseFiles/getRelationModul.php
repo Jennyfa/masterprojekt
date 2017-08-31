@@ -7,23 +7,16 @@ require_once 'database_connections.php';
 //$data = file_get_contents("php://input");
 
 $str =$_GET['techIds'];
-$without =$_GET['wihtout'];
 //$str= str_replace("\"", "", $data);;
 //$str= str_replace("[", "", $str);;
 //$str= str_replace("]", "", $str);;
 
 
 
-$query = "(
-SELECT  tech_name, tech_id, tech_cat, a.ab_type  as 'type', a.t_id, a.dependsOn
-FROM technologien t 
-LEFT JOIN
-abhaengigkeiten a  ON t.tech_id = a.dependsOn WHERE a.t_id IN (".$str.") AND a.dependsOn NOT IN (".$without."))
-UNION 
-(SELECT  tech_name, tech_id, tech_cat, b.b_type as 'type', b.t_id, b.dependsOn 
+$query = "(SELECT  tech_name, tech_id, tech_cat, b.b_type as 'type', b.t_id, b.dependsOn 
 FROM technologien t2 
 LEFT JOIN
-beziehungen b  ON t2.tech_id = b.dependsOn  WHERE b.t_id IN (".$str.") AND b.b_type IN ('basedOn', 'notCompatible', 'Erweiterung') AND b.dependsOn NOT IN (".$without."))";
+beziehungen b  ON t2.tech_id = b.t_id  WHERE b.dependsOn IN (".$str.") AND b.b_type IN ('Ermöglichung'))";
 
 //$query = "SELECT  t.tech_name, t.tech_id  a.ab_type,  r.r_ab_id FROM (technologien t LEFT JOIN relationen r  ON t.tech_id = r.von_tech_id) INNER JOIN abhaengigkeiten a ON r.r_ab_id=a.ab_id WHERE r.r_tech_id IN (".$str.")";
 
