@@ -1,6 +1,6 @@
 <div class="container wrapper ">
 <form class="form-horizontal" role="form" id="empForm">
-    <h3 class="text-center">Entscheidungsunterstützung</h3>
+    <h2 class="text-center">Entscheidungsunterstützung</h2>
     <!--ToDO: besseres multiselect-->
     <!--ToDO: Hilfetexte-->
     <!--ToDO: Rechts anzeigen was ausgewählt -->
@@ -13,7 +13,7 @@
                 <label><input value="new" type="radio" name="projektart" ng-model="empInfo.projektart" />Neuimplementierung</label>
             </div>
             <div class="radio">
-                <label><input value="old" type="radio" name="projektart" ng-model="empInfo.projektart" />Austausch</label>
+                <label><input value="old" type="radio" name="projektart" ng-model="empInfo.projektart" />Erweiterung</label>
             </div>
         </div>
     </div>
@@ -58,17 +58,14 @@
     </div>
 
 
-   <!-- <div class="form-group abfrage_alt">
+ <div class="form-group abfrage_alt">
         <label for="datenbank" class="col-sm-3 control-label">Welche Datenbank wird genutzt:</label>
         <div class="col-sm-3">
-            <select id="datenbank" class="form-control" ng-model="empInfo.datenbank"  multiple ng-multiple="true">
-                <option value="SAP HANA">SAP HANA</option>
-                <option value="MySQL">MySQL</option>
-                <option value="DB2">DB2</option>
+            <select id="datenbank" class="form-control" ng-model="empInfo.datenbank" ng-options="datenbank.tech_name for datenbank in datenbankList" >
             </select>
         </div>
     </div>
--->
+
 
     <!--Contraints: Java muss größer sein als VErsion 7.4... , Qualitätsattribute, derzeit eingesetzte Technologien -->
     <input type="submit" value="Empfehlung erhalten" class="btn btn-primary col-sm-offset-3"  ng-click="pressEmpf(empInfo)"/>
@@ -85,6 +82,7 @@
     <span ng-repeat="kriterium in vorhandeneFeatures" class="label label-default">{{kriterium.f_name}}</span>
     <span ng-repeat="kriterium in empInfo.techs" class="label label-default">{{kriterium.tech_name}}</span>
     <span ng-repeat="kriterium in empInfo.features_alt" class="label label-default">{{kriterium.f_name}}</span>
+    <span class="label label-default">{{empInfo.datenbank.tech_name}}</span>
     <div class="row">
 
 
@@ -147,7 +145,11 @@
                         </td>
 
                     </tr>
+                    <tr ng-if="ergebnis.length=== 0 || ergebnis===[]">
 
+                        <td>Keine Ergebnisse gefunden</td>
+
+                    </tr>
                 </table>
 
                <span class="center"><b>{{empfehlung}}</b></span>

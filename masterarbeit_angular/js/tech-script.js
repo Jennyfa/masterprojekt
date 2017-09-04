@@ -133,7 +133,7 @@ crudApp.controller("DetailController", function ($scope, $http, $routeParams) {
         img.src = url;
     }
 });
-crudApp.controller('MainController', function ($scope, $http, $routeParams, $sce) {
+crudApp.controller('VisuController', function ($scope, $http, $routeParams, $sce) {
 
 
     var abhängigkeitsstufen = 2;
@@ -141,7 +141,7 @@ crudApp.controller('MainController', function ($scope, $http, $routeParams, $sce
         height = 450;
     var force = d3.layout.force()
         .size([width, height])
-        .linkDistance(100) //Länge der Links
+        .linkDistance(160) //Länge der Links
         .charge(-300)
         .on("tick", tick);
     var svg = d3.select(".graph").append("svg")
@@ -458,6 +458,12 @@ crudApp.controller("ToolController", function ($scope, $http) {
                 $scope.techsList = info.data;
             });
 
+    //alle Datenbanken
+    $http.get('DatabaseFiles/getDatabaseList.php')
+        .then(function (info) {
+            $scope.datenbankList = info.data;
+        });
+
         //Anfrage initalisieren
         $scope.anfrage = "";
         $scope.kriterien = 0;
@@ -489,6 +495,7 @@ crudApp.controller("ToolController", function ($scope, $http) {
 
 
             getResult($scope.anfrage);
+            console.log($scope.ergebnis);
             //Formular nicht mehr anzeigen
             $('#empForm').css('display', 'none');
             //Ergebnis anzeigen
@@ -513,6 +520,39 @@ crudApp.controller("ToolController", function ($scope, $http) {
             var neueFeatures = new Array();
             var techFeat = "";
             var techLangs = "";
+            var datenbank = "";
+
+
+            if (abfrage.datenbank != null) {
+                $scope.kriterien = $scope.kriterien + 1;
+                datenbank = abfrage.datenbank.tech_name;
+
+                var config = {
+                    params: {database: datenbank},
+                    headers: {'Accept': 'application/json'}
+                };
+
+                $http.get('DatabaseFiles/getDatabaseFeatures.php', config)
+                    .then(function (info) {
+                        console.log(info);
+                        var database_features=makeStringFeature(info.data);
+                        if(neueFeatures!=0){
+                            neueFeatures=neueFeatures+database_features;}
+                        else{
+                            neueFeatures=database_features;
+                        }
+                        if(techFeat!=0){
+                            techFeat=techFeat+database_features;
+                        }
+                        else{
+                            techFeat=techFeat+database_features;
+                        }
+                    });
+            }
+
+            else {
+                datenbank = 0;
+            }
 
 
             if (abfrage.techs != null) {
@@ -561,6 +601,8 @@ crudApp.controller("ToolController", function ($scope, $http) {
                 techFeat = techFeat + features_alt;
             }
 
+
+
             //Wenn Implementierung
             if (abfrage.projektart == 'new') {
 
@@ -598,10 +640,6 @@ crudApp.controller("ToolController", function ($scope, $http) {
             //Wenn Austausch
             else {
                 //Prüfen ob mit den vorhandenen Technologien schon alle Features abgedeckt sind.
-
-
-
-
                 //vorhandene Technologien besitzen alles was man braucht
                 //welche sind die neuen Features
                 //prüfen ob verwendete Technologien Features hat
@@ -639,10 +677,11 @@ crudApp.controller("ToolController", function ($scope, $http) {
                             });
                     }
                 }
-                //Wenn Features ausgewählt sind
-                if (features_alt != 'abc' || neueFeatures != 0) {
-                    console.log("featureAuswahl vorhanden")
 
+
+
+
+                if (features_alt != 'abc' || neueFeatures != 0 || datenbank !=0) {
                     config = {
                         params: {feature: techFeat},
                         headers: {'Accept': 'application/json'}
@@ -665,6 +704,10 @@ crudApp.controller("ToolController", function ($scope, $http) {
                                 }
 
                             }
+
+
+
+
 
                             //console.log(neueFeatures);
                             //alle Features die nicht vorhanden sind in der neuen Technologie
@@ -774,7 +817,11 @@ crudApp.controller("ToolController", function ($scope, $http) {
                         if (!$scope.ergebnis[sol].dependsOn.match(info.data[i].dependsOnName)) {
                             var anzahl = $scope.ergebnis[sol].emp;
                             anzahl++;
-                            $scope.ergebnis[sol].emp = anzahl;
+                            if($scope.kriterien<=anzahl){
+                                $scope.ergebnis[sol].emp = $scope.kriterien;
+                            }
+                            else{ $scope.ergebnis[sol].emp = anzahl;}
+
                             $scope.ergebnis[sol].dependsOn = "" + $scope.ergebnis[sol].dependsOn + ", " + info.data[i].dependsOnName;
 
                         }
@@ -885,7 +932,12 @@ crudApp.controller("ToolController", function ($scope, $http) {
                                                     //Dann Empfehlung hochsetzen
                                                     var anzahl = $scope.ergebnis[sol].emp;
                                                     anzahl++;
-                                                    $scope.ergebnis[sol].emp = anzahl;
+                                                    if($scope.kriterien<=anzahl){
+                                                        $scope.ergebnis[sol].emp = $scope.kriterien;
+                                                    }
+                                                    else{ $scope.ergebnis[sol].emp = anzahl;}
+
+
                                                 }
                                                 //und feature count gleich true setzen
                                                 featureCount = true;
@@ -897,7 +949,11 @@ crudApp.controller("ToolController", function ($scope, $http) {
                                         //emphlung hochsetzen
                                         var anzahl = $scope.ergebnis[sol].emp;
                                         anzahl++;
-                                        $scope.ergebnis[sol].emp = anzahl;
+                                        if($scope.kriterien<=anzahl){
+                                            $scope.ergebnis[sol].emp = $scope.kriterien;
+                                        }
+                                        else{ $scope.ergebnis[sol].emp = anzahl;}
+
                                     }
 
                                     if (!combiExist) {
