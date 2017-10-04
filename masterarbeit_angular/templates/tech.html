@@ -1,4 +1,4 @@
-<div class="container wrapper">
+<div class="container wrapper " >
 
     <div class="row">
         <div class="col-lg-12">
@@ -47,7 +47,9 @@
                     <tr ng-repeat="detail in all.data | orderBy:sortType:sortReverse | filter:search_query ">
                         <td>{{defineImage(detail.tech_name, detail.tech_id)}}
                             <img class="img_small" id="img_{{detail.tech_id}}"><span>
-                            {{detail.tech_name}}</span>
+                                 <a go-click="/techdetails/{{detail.tech_id}}/{{detail.tech_name}}" title="Edit"
+                                         data-target="#techdetails">
+                            {{detail.tech_name}}</a></span>
                           </td>
 
                         <td> {{detail.tech_cat}}

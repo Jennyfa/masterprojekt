@@ -3,7 +3,7 @@ header("content-type: text/html; charset=UTF-8");
 // Including database connections
 require_once 'database_connections.php';
 // mysqli query to fetch all data from database
-$query = "SELECT f_name  FROM feature ";
+$query = "SELECT f_name  FROM feature ORDER BY f_name ASC";
 
 $result = mysqli_query($con, $query);
 $arr = array();

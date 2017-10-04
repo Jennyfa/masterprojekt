@@ -1,6 +1,7 @@
 // Application module
 
 
+
 $(document).on('click', function (event) {
     var target = $(event.target);
 
@@ -9,6 +10,39 @@ $(document).on('click', function (event) {
     }
 });
 
+
+$(document).ready(function(){
+
+    $('[data-toggle="popover"]').popover();
+
+
+
+    // Der Button wird mit JavaScript erzeugt und vor dem Ende des body eingebunden.
+    var back_to_top_button = ['<a href="#top" class="back-to-top">Nach oben</a>'].join("");
+    $("body").append(back_to_top_button)
+
+    // Der Button wird ausgeblendet
+    $(".back-to-top").hide();
+
+    // Funktion für das Scroll-Verhalten
+    $(function () {
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 100) { // Wenn 100 Pixel gescrolled wurde
+                $('.back-to-top').fadeIn();
+            } else {
+                $('.back-to-top').fadeOut();
+            }
+        });
+
+        $('.back-to-top').click(function () { // Klick auf den Button
+            $('body,html').animate({
+                scrollTop: 0
+            }, 800);
+            return false;
+        });
+    });
+
+});
 
 'use strict';
 //ToDO: in Module aufteilen (https://docs.angularjs.org/guide/module)
@@ -1073,6 +1107,23 @@ crudApp.controller("ToolController", function ($scope, $http) {
     }
 );
 
+
+
+crudApp.directive("searchableMultiselect", this.searchableMultiselect = function($timeout) {
+    return {
+        templateUrl: 'searchableMultiselect.html',
+        restrict: 'E',
+        scope: {
+            displayAttr: '@',
+            selectedItems: '=',
+            allItems: '=',
+            addItem: '&',
+            removeItem: '&'
+        },
+        link: function(scope, element, attrs) {
+        }
+    }
+});
 
 //prüfen wo sich Array unterscheidet
 /*abfrage.features = ($.grep(abfrage.features, function(el) {

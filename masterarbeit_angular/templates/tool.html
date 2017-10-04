@@ -1,4 +1,4 @@
-<div class="container wrapper ">
+<div class="container wrapper">
 <form class="form-horizontal" role="form" id="empForm">
     <h2 class="text-center">Entscheidungsunterstützung</h2>
     <!--ToDO: besseres multiselect-->
@@ -20,10 +20,16 @@
 
     <div class="form-group">
         <label for="language" class="col-sm-3 control-label">Welche Programmiersprachen sind dem Team bekannt?</label>
+
+
+
         <div class="col-sm-3">
-            <select id="language" class="form-control" ng-model="empInfo.language"  multiple ng-multiple="true" ng-options="language.tech_name
+            <select id="language" class="form-control" ng-model="empInfo.language"  multiple ng-multiple="true"
+                    ng-options="language.tech_name
             for language in languageList" >
             </select>
+
+
         </div>
     </div>
 

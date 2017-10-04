@@ -1,11 +1,12 @@
 <html ng-app="crudApp">
 <head>
-    <title>Entscheidungsunterstützung Prototyp</title>
+    <title>Prototyp Entscheidungsunterstützung für Softwarearchitekten zur Auswahl von Frontend-Technologien</title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <meta name="description" content="depends ist ein Prototyp für eine Entscheidungsunterstützung für Softwarearchitekten zur Auswahl von Frondend-Technologien für SAP HANA und wurde im Rahmen einer Masterarbeit an der Universität Hamburg von Jennyfa Jurisch erstellt." />
 
     <!-- Include Bootstrap CSS -->
+
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <!-- Include main CSS -->
     <link rel="stylesheet" type="text/css" href="css/style.css">
@@ -14,6 +15,8 @@
     <!-- Include Bootstrap Javascript -->
     <script src="js/bootstrap.min.js"></script>
     <script src="js/scroll.js"></script>
+
+
     <script type="text/javascript" src="js/bootstrap-rating.js"></script>
     <!-- Schriften -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
@@ -21,6 +24,7 @@
 
     <!-- AngularJS -->
     <!-- Angular Material requires Angular.js Libraries -->
+    <script src="js/popover.js"></script>
     <script src="lib/angular/angular.min.js"></script>
     <script src="lib/angular/angular_1_router.js"></script>
     <script src="js/ui-bootstrap-tpls-2.5.0.min.js"></script>
@@ -65,8 +69,8 @@
 <div class="ng-view"></div>
 
 <footer class="container-fluid text-center bg-grey">
-    <a href="#myPage" title="To Top">
-        <span class="glyphicon glyphicon-chevron-up"></span>
+    <a href="#topPage" title="To Top">
+        <span class="glyphicon glyphicon-chevron-up back-to-top"></span>
     </a>
     <p>Made by Jennyfa Jurisch</p>
 </footer>

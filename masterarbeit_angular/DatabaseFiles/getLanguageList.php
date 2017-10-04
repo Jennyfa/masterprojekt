@@ -6,7 +6,7 @@ require_once 'database_connections.php';
 //$query = "SELECT * from emp_details ORDER BY emp_id ASC";
 
 
-$query = "SELECT tech_name FROM technologien  WHERE tech_cat='language'";
+$query = "SELECT tech_name FROM technologien  WHERE tech_cat='language' ORDER BY tech_name ASC";
 
 
 
