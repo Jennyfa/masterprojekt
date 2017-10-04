@@ -45,10 +45,7 @@ $(document).ready(function(){
 });
 
 'use strict';
-//ToDO: in Module aufteilen (https://docs.angularjs.org/guide/module)
-//ToDO: Testing & Perfomance test
-//ToDO: Bei Features noch zusammenfassen, welche Technologien zusammen verwendet werden können
-//ToDO: Warte Symbol
+
 
 
 var crudApp = angular.module('crudApp', ['ngRoute', 'ui.bootstrap']);

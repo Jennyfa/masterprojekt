@@ -1,9 +1,11 @@
 <?php
 
+
 $host_name = 'localhost';
 $database = 'db_master';
-$user_name = 'user';
+$user_name = 'root';
 $password = 'passwort';
+
 
 header("content-type: text/html; charset=UTF-8");
 // Connecting to database as mysqli_connect("hostname", "username", "password", "database name");
